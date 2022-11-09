@@ -1,0 +1,18 @@
+CC = gcc
+CFLAGS = -Wall -g -o
+PKG= `pkg-config --cflags --libs glib-2.0`
+MODULES_PATH = src/
+MODULES_1 = $(MODULES_PATH)users.c $(MODULES_PATH)drivers.c $(MODULES_PATH)rides.c
+MODULES= $(MODULES_PATH)eval.c $(MODULES_PATH)parser.c 
+FILES = $(MODULES_1) $(MODULES)
+
+guiao-1:
+    @echo "Compiling"
+    cc $(FILES) src/main.c $(CFLAGS) guiao-1 $(PKG) 
+
+run:
+    ./guiao-1 input.txt
+
+clean:
+    rm -r guiao-1
+	
