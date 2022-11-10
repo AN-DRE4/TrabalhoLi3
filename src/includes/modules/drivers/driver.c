@@ -309,6 +309,19 @@ char* get_driver_car_class(void* r) {
 }
 
 /**
+ * @brief Função get_driver_account_status
+ * 
+ * Função que devolve uma copia do account_status de um driver
+ * 
+ * @returns account_status de um driver
+ */
+
+char* get_driver_account_status(void* r) {
+	DRIVER rc = (DRIVER) r;
+	return strdup(rc->account_status);
+}
+
+/**
  * @brief Função copy_driver
  *
  * Função que copia um driver para outro
