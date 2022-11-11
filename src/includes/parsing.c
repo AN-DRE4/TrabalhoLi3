@@ -22,14 +22,9 @@
  * @brief Função create_users_catalog
  *
  * Criação dos catálogos dos users
- * //Recebe como parametros o endereco de inteiros bots, orgs e useres em que sao posteriormente
- * //incrementados ao longo da criacao do catalgo o numero de bots, orgs e users existentes no catalogo
- * 
- * Linhas acima nao necessarias, visto que nao sao utilizadas
  * 
  * @returns catálogo dos users
  */
-//USERS create_users_catalog(int *bots, int *orgs, int *users) {
 USER create_users_catalog() {
 
 	USER us = create_users();
@@ -96,6 +91,8 @@ DRIVER create_drivers_catalog() {
  * @brief Função create_rides_catalog
  * 
  * Criação do catálogo das rides
+ * As tabelas ht_user_ride e ht_driver_ride vão guardar respetivamente para cada utilizador como chave da tabela a viagem que ele realizou
+ * e para cada condutor como chave da tabela a viagem que ele concluiu
  * 
  * @returns catálogo das rides
  */
