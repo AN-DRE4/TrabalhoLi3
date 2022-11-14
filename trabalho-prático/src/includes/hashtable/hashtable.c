@@ -346,35 +346,6 @@ static ht_entry* ht_incrementation_pair(char *key) {
 }
 
 /**
- * @brief Função ht_incrementation_insert
- *
- * Função que insere o elemento na hash key a seguir
- * Utilizado para o catálogo dos commits
- * 
- */
-void ht_incrementation_insert(ht *ht, char* key) {
-	int slot = hash(key);
-	
-	ht_entry * entry = ht->entries[slot];
-
-	if (entry == NULL) {
-		ht->entries[slot] = ht_incrementation_pair(key);
-		return;
-	}
-
-	ht_entry *prev;
-	while (entry != NULL) {
-		if (strcmp(entry->key, key) == 0) {
-			*((int*)entry->data) = *((int*)entry->data) + 1 ;
-			return;
-		}
-		prev = entry;
-		entry = prev->next;
-	}
-	prev->next = ht_incrementation_pair(key);
-}
-
-/**
  * @brief Função ht_destroy
  *
  * Função que liberta a memória utilizada pela hashtable
