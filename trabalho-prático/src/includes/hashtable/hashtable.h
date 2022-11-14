@@ -15,7 +15,6 @@ void ht_del(ht *ht, char *key);
 void ht_insert(ht *ht, char *key, void *d);
 void ht_insert_2(ht *ht, char *key, void* d);
 void ht_insert_3(ht *ht, char *key, void *d);
-void ht_incrementation_insert(ht *ht, char* key);
 
 
 void* ht_get(ht *ht, char *key, void*(*create_type)(void),void(*copy_data)(void*, void*));
