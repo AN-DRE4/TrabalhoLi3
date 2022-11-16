@@ -81,18 +81,18 @@ double get_ride_total(void *r, DRIVERS ds) {
 	//printf("Cheguei aqui 1\n");
     if (strcmp(get_driver_car_class(d), "green") == 0) {
 		total += 4.00;
-		total += 0.79 * atoi(get_ride_distance(rc));
-		return total += atoi(get_ride_tip(rc));
+		total += 0.79 * atof(get_ride_distance(rc));
+		return total += atof(get_ride_tip(rc));
 	}
 	else if (strcmp(get_driver_car_class(d), "basic") == 0) {
 		total += 3.25;
-		total += 0.62 * atoi(get_ride_distance(rc));
-		return total += atoi(get_ride_tip(rc));
+		total += 0.62 * atof(get_ride_distance(rc));
+		return total += atof(get_ride_tip(rc));
 	}
 	else {
 		total += 5.20;
-		total += 0.94 * atoi(get_ride_distance(rc));
-		return total += atoi(get_ride_tip(rc));
+		total += 0.94 * atof(get_ride_distance(rc));
+		return total += atof(get_ride_tip(rc));
 	}
 }
 
