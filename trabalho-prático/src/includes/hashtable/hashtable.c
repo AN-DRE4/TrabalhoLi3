@@ -135,6 +135,40 @@ void* ht_get_no_mem_cpy(ht *ht, char *key) {
 }
 
 /**
+ * @brief Função ht_get_next
+ * 
+ * Função que obtem o proximo elemento dentro de uma slot
+ * 
+ * @returns devolve o endereco desse elemento dentro da hashtable
+ */
+void* ht_get_next(ht *ht, char *key, int r) {
+	int slot = hash(key);
+
+	ht_entry *entry = ht->entries[slot];
+
+	if (entry == NULL)
+		return NULL;
+
+	while(r > 0) {
+		entry = entry->next;
+		r--;
+	}
+
+	while (entry != NULL) {
+		if (strcmp(entry->key, key) == 0) {
+			if (entry->next != NULL)
+				return entry->next->data;
+			else
+				return NULL;
+		}
+
+		entry = entry->next;
+	}
+
+	return NULL;
+}
+
+/**
  * @brief Função ht_get_s
  *
  * Função que devolve o proximo elemento na tabela por ordem de slots
