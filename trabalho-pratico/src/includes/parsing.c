@@ -13,9 +13,9 @@
 #include "modules/users/user.h"
 #include "modules/drivers/driver.h"
 #include "modules/rides/ride.h"
-#include "modules/users/user.h"
-#include "modules/drivers/driver.h"
-#include "modules/rides/ride.h"
+#include "modules/users/users.h"
+#include "modules/drivers/drivers.h"
+#include "modules/rides/rides.h"
 #include "hashtable/hashtable.h"
 
 /**
@@ -25,9 +25,9 @@
  * 
  * @returns catálogo dos users
  */
-USER create_users_catalog() {
+USERS create_users_catalog() {
 
-	USER us = create_users();
+	USERS us = create_users();
 	
 	char line[LINE_BUFFER];
 
@@ -60,9 +60,9 @@ USER create_users_catalog() {
  * @returns catálogo dos drivers
  */
 
-DRIVER create_drivers_catalog() {
+DRIVERS create_drivers_catalog() {
 	
-	DRIVER dr = create_drivers();
+	DRIVERS dr = create_drivers();
 
 	char line[LINE_BUFFER];
 
@@ -97,9 +97,9 @@ DRIVER create_drivers_catalog() {
  * @returns catálogo das rides
  */
 
-RIDE create_rides_catalog(USER us, DRIVER ds, ht *ht_user_ride, ht *ht_driver_ride) {
+RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver_ride) {
 	
-	RIDE rd = create_rides();
+	RIDES rd = create_rides();
 
 	char line[LINE_BUFFER];
 
