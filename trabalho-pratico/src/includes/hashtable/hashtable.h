@@ -23,6 +23,7 @@ void* ht_get_next(ht *ht, char *key, int r);
 char* ht_get_s(ht *ht, int *slot, int *node, void** d);
 
 int ht_count(ht *ht);
+int ht_count_keys(ht *ht, char *key);
 
 void ht_destroy(ht *ht, void(*delete_data)(void *));
 void ht_destroy_no_mem_cpy(ht *ht);
