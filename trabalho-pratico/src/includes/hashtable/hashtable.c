@@ -455,6 +455,27 @@ int ht_count(ht *ht) {
 }
 
 /**
+ * @brief Função ht_count_keys
+ * 
+ * Função que conta o número de vezes que uma key aparece na hashtable
+ * 
+ * @returns número de vezes que a key aparece na hashtable
+ */
+
+int ht_count_keys(ht *ht, char *key) {
+	int slot = hash(key);
+	ht_entry *entry = ht->entries[slot];
+	int count = 0;
+	while (entry != NULL) {
+		if (strcmp(entry->key, key) == 0) {
+			count++;
+		}
+		entry = entry->next;
+	}
+	return count;
+}
+
+/**
  * @brief Função ht_print_table
  *
  * Função que printa a hashtable
