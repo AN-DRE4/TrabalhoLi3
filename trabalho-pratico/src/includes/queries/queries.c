@@ -38,7 +38,6 @@ static void get_output_dir_file(char * f){
 
     //mkdir(f,0777);
 	mkdir(f);
-
 }
 
 /**
@@ -215,6 +214,106 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 		}
 	}
 }
+
+/**
+ * @brief Função query2
+ *
+ * Função que executa a query 2 que recebe um N e devolve
+ * os N condutores com maior avaliação média, em caso de 
+ * empate, o resultado deverá ser ordenado de forma a que os  
+ * condutores com a viagem mais recente surjam primeiro.
+ * Caso haja novo empate, é usado o id do condutor para desempatar (ordem crescente).
+ * Devolve os dados no seguinte formato:
+ * id;nome;avaliação_media
+ *
+ */
+
+static void query_2(int n,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht *ht_user_ride)
+{    int k=n;
+    FILE *f = get_output_file();
+    if(n<=0){
+        fclose(f);
+        return;
+    }
+    else{
+        while(n>0){
+            int i=0;
+            double score_final = 0;
+            double array_av[n-1];
+            int id_final[n-1];
+            char *nome_final[n-1];
+            array_av[0] = 0;
+            for(int id=1;id<=10000;id++){
+                //if(condicção para ser diferente do que ja temos)
+                DRIVER d = get_driver(ds,atoi(id));
+                int num=0;
+                double total=0;
+                double score = get_avaliacao_media_driver(d,ht_driver_ride,rs,ds,&num,&total);
+                for(int j=0;j<=i;j++){
+                    if((score>score_final)&&(array_av[j]!=score)) {
+                        score_final = score;
+                        id_final[i]=get_driver_id(d);
+                        nome_final[i]=get_driver_name(d);
+                    }
+                }
+            }
+        array_av[i]=score_final;
+        fprintf(f,"%d;%s;%.3f\n",id_final[i],nome_final[i],array_av[i]);
+        i++;n--;
+        }
+    }
+}
+
+/**
+ * @brief Função query3
+ *
+ * Função que executa a query 3 que recebe um N e retorna os N
+ * utilizadores com maior distância viajada. Em caso de empate,
+ * o resultado é ordenado de forma que os utilizadores com a 
+ * viagem mais recente surjam primeiro. Caso haja novo empate,
+ * deverá ser usado o username do utilizador para desempatar(por ordem crescente)
+ * Devolve os dados no seguinte formato:
+ * username;nome;distancia_total
+ *
+ */
+
+static void query_3(int n,USERS us,RIDES rs){
+    FILE *f = get_output_file();
+    if(n<=0){
+        fclose(f);
+        return;
+    }
+    else{
+        while(n>0){
+            int elem=0;
+            char *user_mais_distância[n];
+            char *user_mais_distância[n];
+            char *user_mais_distância[elem] = get_ride_user(get_ride(rs,atoi(1)));
+            char *name_mais_distância[elem] = get_user_name(get_user(us,atoi(1)));
+            int distancia[elem] = get_ride_distance(get_ride(rs,atoi(1)));
+            int id=2;
+            while(id<=1000000){
+                RIDE r = get_ride(rs,atoi(id));
+                USER u = get_user(us,atoi(id));
+                if(get_ride_distance(r)>user_mais_distância[elem]){
+                    user_mais_distância[elem]=get_ride_distance;
+                }
+                else if(get_ride_distance(r)==user_mais_distância[elem]){
+                    //situação em que data da viagem mais recente ganha ----> criar get_ride_date
+                    if(atoi(get_ride_user(rs))>atoi(get_ride_user(rs++))) user_mais_distância[elem]=get_ride_user(rs);
+                    else user_mais_distância[elem]=get_ride_user(rs++);
+                }
+            id++;
+            }
+        fprintf(f,"%s;%s;%d",user_mais_distância[elem],name,distance);
+        fclose(f);
+        n--;
+        elem++;
+        }
+    }
+    return;
+}
+
 
 /**
  * @brief Função read_queries
