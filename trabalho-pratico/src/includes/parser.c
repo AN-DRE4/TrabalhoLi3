@@ -70,23 +70,23 @@ int is_valid_account_status(char *s) {
 	return (strcmp(s, "active") == 0 || strcmp(s, "inactive") == 0) ? 1 : 0;
 }
 
-/**
- * @brief Função remove_spaces
- *
- * Função que retira todos os espaços (' ') de uma dada string
- * 
- * @returns string sem espaços
- */
-static char* remove_spaces(char *s) {
-	char *p = s;
-	while (*p)
-	{
-		if (*p == ' ')
-			sh(p);
-		p++;
-	}
-	return s;
-}
+// /**
+//  * @brief Função remove_spaces
+//  *
+//  * Função que retira todos os espaços (' ') de uma dada string
+//  * 
+//  * @returns string sem espaços
+//  */
+// static char* remove_spaces(char *s) {
+// 	char *p = s;
+// 	while (*p)
+// 	{
+// 		if (*p == ' ')
+// 			sh(p);
+// 		p++;
+// 	}
+// 	return s;
+// }
 
 /**
  * @brief Função is_valid_date

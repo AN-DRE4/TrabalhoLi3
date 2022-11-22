@@ -362,22 +362,22 @@ void ht_insert_3(ht *ht, char *key, void *data) {
 	}
 }
 
-/**
- * @brief Função ht_incrementation_pair
- *
- * Função que cria um nodo e inicializa o seu data a 1
- * 
- * @returns entry da hashtable
- */
-static ht_entry* ht_incrementation_pair(char *key) {
-	ht_entry *entry = malloc(sizeof(ht_entry));
-	entry->key = strdup(key);
-	entry->data = malloc(sizeof(int));
-	*((int*)entry->data) = 1;
-	entry->next = NULL;
+// /**
+//  * @brief Função ht_incrementation_pair
+//  *
+//  * Função que cria um nodo e inicializa o seu data a 1
+//  * 
+//  * @returns entry da hashtable
+//  */
+// static ht_entry* ht_incrementation_pair(char *key) {
+// 	ht_entry *entry = malloc(sizeof(ht_entry));
+// 	entry->key = strdup(key);
+// 	entry->data = malloc(sizeof(int));
+// 	*((int*)entry->data) = 1;
+// 	entry->next = NULL;
 
-	return entry; 
-}
+// 	return entry; 
+// }
 
 /**
  * @brief Função ht_destroy
