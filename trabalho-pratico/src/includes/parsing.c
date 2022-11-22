@@ -122,7 +122,7 @@ RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver
 		USER u = get_user_no_mem_cpy(us, user_id);
 
 		if(u != NULL) {
-			ht_insert_3(ht_user_ride, user_id, r);
+			ht_insert_2(ht_user_ride, user_id, r);
 		}
 
 		free(user_id);
@@ -134,7 +134,7 @@ RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver
 		DRIVER d = get_driver_no_mem_cpy(ds, driver_id);
 
 		if(d != NULL) {
-			ht_insert_3(ht_driver_ride, driver_id, r);
+			ht_insert_2(ht_driver_ride, driver_id, r);
 		}
 
 		free(driver_id);
