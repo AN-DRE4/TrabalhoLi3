@@ -281,23 +281,13 @@ char *get_user_account_status(void *r) {
 */
 
 void copy_user(void* dst, void* src) {
-    printf("Entrei na copy_user\n");
     USER r = (USER) src;
-    printf("Copiei o user\n");
     USER d = (USER) dst;
-    printf("Copiei o user destino\n");
     set_user_username(d, r->username);
-    printf("Fiz set do username\n");
     set_user_name(d, r->name);
-    printf("Fiz set do name\n");
     set_user_gender(d, r->gender);
-    printf("Fiz set do gender\n");
     set_user_birth_date(d, r->birth_date);
-    printf("Fiz set do birth_date\n");
     set_user_account_creation(d, r->account_creation);
-    printf("Fiz set do account_creation\n");
     set_user_pay_method(d, r->pay_method);
-    printf("Fiz set do pay_method\n");
     set_user_account_status(d, r->account_status);
-    printf("Fiz set do account_status\n");
 }

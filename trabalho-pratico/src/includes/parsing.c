@@ -10,21 +10,29 @@
 #include "define.h"
 #include "parsing.h"
 #include "parser.h"
-#include "modules/users/user.h"
-#include "modules/drivers/driver.h"
-#include "modules/rides/ride.h"
 #include "modules/users/users.h"
 #include "modules/drivers/drivers.h"
 #include "modules/rides/rides.h"
+#include "modules/users/user.h"
+#include "modules/drivers/driver.h"
+#include "modules/rides/ride.h"
 #include "hashtable/hashtable.h"
+
+
+#include <time.h>
 
 /**
  * @brief Função create_users_catalog
  *
  * Criação dos catálogos dos users
+ * //Recebe como parametros o endereco de inteiros bots, orgs e useres em que sao posteriormente
+ * //incrementados ao longo da criacao do catalgo o numero de bots, orgs e users existentes no catalogo
+ * 
+ * Linhas acima nao necessarias, visto que nao sao utilizadas
  * 
  * @returns catálogo dos users
  */
+//USERS create_users_catalog(int *bots, int *orgs, int *users) {
 USERS create_users_catalog() {
 
 	USERS us = create_users();
@@ -91,13 +99,14 @@ DRIVERS create_drivers_catalog() {
  * @brief Função create_rides_catalog
  * 
  * Criação do catálogo das rides
- * As tabelas ht_user_ride e ht_driver_ride vão guardar respetivamente para cada utilizador como chave da tabela a viagem que ele realizou
- * e para cada condutor como chave da tabela a viagem que ele concluiu
  * 
  * @returns catálogo das rides
  */
 
 RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver_ride) {
+
+	double time_spent = 0.0;
+	clock_t begin = clock();
 	
 	RIDES rd = create_rides();
 
@@ -106,6 +115,9 @@ RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver
 	FILE *f = fopen(RIDES_FILEPATH, "r");
 
 	fgets(line, LINE_BUFFER, f);
+
+	int count = 0;
+	int count2 = 0;
 	
 	while(fgets(line, LINE_BUFFER, f) != NULL) {
 		remove_possible_new_line(line);
@@ -142,8 +154,14 @@ RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver
 		insert_ride(rd, key, r);
 
 		free(key);
-	 }
+	}
+
 	fclose(f);
+
+	clock_t end = clock();
+	time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("The elapsed time to create the rides table is %f seconds\n", time_spent);
 
 	return rd;
 }
+

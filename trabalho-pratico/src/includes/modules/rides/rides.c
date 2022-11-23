@@ -33,8 +33,8 @@ struct rides {
 RIDES create_rides() {
     RIDES rs = malloc(sizeof(*rs));
     if (rs == NULL) {
-        printf("Erro ao criar rides\n");
-        return NULL;
+		printf("Erro ao criar rides\n");
+		return NULL;
     }
     ht *ht = ht_create(TABLE_SIZE);
     rs->rides = ht;
@@ -59,7 +59,7 @@ void delete_rides(RIDES rs) {
  * 
  */
 void insert_ride(RIDES rs, char* key, RIDE r){
-    ht_insert(rs->rides, key, r);
+	ht_insert(rs->rides, key, r);
 }
 
 /**

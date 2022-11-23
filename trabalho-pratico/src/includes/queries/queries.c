@@ -13,7 +13,6 @@
 
 #include "../define.h"
 #include "../hashtable/hashtable.h"
-//#include "../linkedlist.h"
 #include "../parser.h"
 #include "../parsing.h"
 
@@ -36,8 +35,9 @@ int output_n = 1;
  */
 static void get_output_dir_file(char * f){
 
-    mkdir(f,0777);
-	//mkdir(f);
+    //mkdir(f,0777);
+	mkdir(f);
+
 }
 
 /**
@@ -77,7 +77,6 @@ double get_ride_total(void *r, DRIVERS ds) {
 	double total = 0;
 	char *driver = get_ride_driver(rc);
 	DRIVER d = get_driver(ds, driver);
-	//printf("Cheguei aqui 1\n");
     if (strcmp(get_driver_car_class(d), "green") == 0) {
 		total += 4.00;
 		total += 0.79 * atof(get_ride_distance(rc));
@@ -94,6 +93,16 @@ double get_ride_total(void *r, DRIVERS ds) {
 		return total += atof(get_ride_tip(rc));
 	}
 }
+
+/**
+ * @brief Função get_avaliacao_media_user
+ * 
+ * Função que calcula a avaliação média de um user
+ * 
+ * @param u user
+ * 
+ * @returns avaliação média do user
+ */
 
 
 static double get_avaliacao_media_user(USER u, ht *ht_user_ride, RIDES rs, DRIVERS ds, int *n, double *n2) {
@@ -215,19 +224,6 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 	}
 }
 
-/**
- * @brief Função query2
- *
- * Função que executa a query 2 que recebe um N e devolve
- * os N condutores com maior avaliação média, em caso de 
- * empate, o resultado deverá ser ordenado de forma a que os  
- * condutores com a viagem mais recente surjam primeiro.
- * Caso haja novo empate, é usado o id do condutor para desempatar (ordem crescente).
- * Devolve os dados no seguinte formato:
- * id;nome;avaliação_media
- *
- */
-
 static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht *ht_user_ride)
 {
 	int n = atoi(inp);
@@ -268,57 +264,6 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
 }
 
 /**
- * @brief Função query3
- *
- * Função que executa a query 3 que recebe um N e retorna os N
- * utilizadores com maior distância viajada. Em caso de empate,
- * o resultado é ordenado de forma que os utilizadores com a 
- * viagem mais recente surjam primeiro. Caso haja novo empate,
- * deverá ser usado o username do utilizador para desempatar(por ordem crescente)
- * Devolve os dados no seguinte formato:
- * username;nome;distancia_total
- *
- */
-
-// static void query_3(int n,USERS us,RIDES rs){
-//     FILE *f = get_output_file();
-//     if(n<=0){
-//         fclose(f);
-//         return;
-//     }
-//     else{
-//         while(n>0){
-//             int elem=0;
-//             char *user_mais_distância[n];
-//             char *user_mais_distância[elem] = get_ride_user(get_ride(rs,atoi(1)));
-//             char *name_mais_distância[elem] = get_user_name(get_user(us,atoi(1)));
-//             int distancia[elem] = get_ride_distance(get_ride(rs,atoi(1)));
-//             int id=2;
-//             while(id<=1000000){
-//                 RIDE r = get_ride(rs,atoi(id));
-//                 USER u = get_user(us,atoi(id));
-//                 if(get_ride_distance(r)>user_mais_distância[elem]){
-//                     user_mais_distância[elem]=get_ride_distance;
-//                 }
-//                 else if(get_ride_distance(r)==user_mais_distância[elem]){
-//                     //situação em que data da viagem mais recente ganha ----> criar get_ride_date
-//                     if(atoi(get_ride_user(rs))>atoi(get_ride_user(rs++))) user_mais_distância[elem]=get_ride_user(rs);
-//                     else user_mais_distância[elem]=get_ride_user(rs++);
-//                 }
-//             id++;
-//             }
-//         fprintf(f,"%s;%s;%d",user_mais_distância[elem],name,distance);
-//         fclose(f);
-//         n--;
-//         elem++;
-//         }
-//     }
-//     return;
-// }
-
-
-
-/**
  * @brief Função read_queries
  *
  * Função que lê as queries solicitadas no ficheiro de input
@@ -338,13 +283,7 @@ void read_queries(char *f)
 	char line[1024];
 	FILE *input_commands = fopen(f, "r");
 	get_output_dir_file("saida");
-	printf("A tabela user_ride tem %d entradas.\n", ht_count(ht_user_ride));	
-	/*if((ht_get_no_mem_cpy(ht_user_ride, "SaCruz110")) != NULL) printf("Pila1\n");
-	if((ht_get_no_mem_cpy(ht_user_ride, "ClarPacheco48")) != NULL) printf("Pila2\n");
-	if((ht_get_no_mem_cpy(ht_user_ride, "GabriJesus")) != NULL) printf("Pila3\n");*/
-	/*if((ht_get_no_mem_cpy(ht_driver_ride, "000000004780")) != NULL) printf("Pila4\n");
-	if((ht_get_no_mem_cpy(ht_driver_ride, "000000007141")) != NULL) printf("Pila5\n");
-	if((ht_get_no_mem_cpy(ht_driver_ride, "000000003123")) != NULL) printf("Pila6\n");*/
+	printf("A tabela user_ride tem %d entradas.\n", ht_count(ht_user_ride));
 	while (fgets(line, 1024, input_commands) != NULL)
 	{
 		remove_possible_new_line(line);
@@ -364,11 +303,6 @@ void read_queries(char *f)
 		switch (atoi(query_param[0]))
 		{
 		case 1:
-			printf("Query 1\n");
-			//printf("Numero de rides do user %s na user_ride: %d\n", "SaCruz110",ht_count_keys(ht_user_ride, "SaCruz110"));
-			//printf("%s\n", get_ride_id(ht_get_no_mem_cpy(ht_user_ride, "SaCruz110")));
-			//printf("%s\n", get_ride_id(ht_get_next(ht_user_ride, "SaCruz110", 0)));
-			ht_count_keys(ht_user_ride, "SaCruz110");
 			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride);
 			break;
 		case 2:

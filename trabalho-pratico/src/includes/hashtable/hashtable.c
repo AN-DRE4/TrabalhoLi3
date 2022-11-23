@@ -83,28 +83,21 @@ static ht_entry* ht_pair(char *key, void *d) {
  * @returns data do slot
  */
 void* ht_get(ht *ht, char *key, void*(*create_data)(void),void(*copy_data)(void*, void*)) {
-	//printf("Entrei no ht_get\n");
 	int slot = hash(key);
 
 	ht_entry *entry = ht->entries[slot];
-	//printf("Tudo bem até aqui\n");
 	if (entry == NULL)
 		return NULL;
 
-	//printf("Tudo bem até aqui2\n");
 	while (entry != NULL) {
 		if (strcmp(entry->key, key) == 0) {
-			//printf("Entrei aqui\n");
 			void* d = create_data();
-			//printf("Teste1\n");
 			copy_data(d, entry->data);
-			//printf("Teste2\n");
 			return d;
 		}
 
 		entry = entry->next;
 	}
-	//printf("Tudo bem até aqui3\n");
 	return NULL;
 }
 
@@ -342,8 +335,10 @@ void ht_insert_3(ht *ht, char *key, void *data) {
 			ht_entry *prev;
 
 			while (entry != NULL) {
-				if (strcmp(data, entry->data) == 0)
+				if (strcmp(data, entry->data) == 0) {
+					//printf("ERRO: %s já existe na tabela\n", (char*)data);
 					return;
+				}
 
 				prev = entry;
 				entry = prev->next;
@@ -362,22 +357,51 @@ void ht_insert_3(ht *ht, char *key, void *data) {
 	}
 }
 
-// /**
-//  * @brief Função ht_incrementation_pair
-//  *
-//  * Função que cria um nodo e inicializa o seu data a 1
-//  * 
-//  * @returns entry da hashtable
-//  */
-// static ht_entry* ht_incrementation_pair(char *key) {
-// 	ht_entry *entry = malloc(sizeof(ht_entry));
-// 	entry->key = strdup(key);
-// 	entry->data = malloc(sizeof(int));
-// 	*((int*)entry->data) = 1;
-// 	entry->next = NULL;
+/**
+ * @brief Função ht_incrementation_pair
+ *
+ * Função que cria um nodo e inicializa o seu data a 1
+ * 
+ * @returns entry da hashtable
+ */
+static ht_entry* ht_incrementation_pair(char *key) {
+	ht_entry *entry = malloc(sizeof(ht_entry));
+	entry->key = strdup(key);
+	entry->data = malloc(sizeof(int));
+	*((int*)entry->data) = 1;
+	entry->next = NULL;
 
-// 	return entry; 
-// }
+	return entry; 
+}
+
+/**
+ * @brief Função ht_incrementation_insert
+ *
+ * Função que insere o elemento na hash key a seguir
+ * Utilizado para o catálogo dos commits
+ * 
+ */
+void ht_incrementation_insert(ht *ht, char* key) {
+	int slot = hash(key);
+	
+	ht_entry * entry = ht->entries[slot];
+
+	if (entry == NULL) {
+		ht->entries[slot] = ht_incrementation_pair(key);
+		return;
+	}
+
+	ht_entry *prev;
+	while (entry != NULL) {
+		if (strcmp(entry->key, key) == 0) {
+			*((int*)entry->data) = *((int*)entry->data) + 1 ;
+			return;
+		}
+		prev = entry;
+		entry = prev->next;
+	}
+	prev->next = ht_incrementation_pair(key);
+}
 
 /**
  * @brief Função ht_destroy
