@@ -6,9 +6,9 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
-#define DRIVERS_FILEPATH "entrada/drivers.csv"
-#define RIDES_FILEPATH "entrada/rides.csv"
-#define USERS_FILEPATH "entrada/users.csv"
+#define DRIVERS_FILEPATH "trabalho-pratico/drivers.csv"
+#define RIDES_FILEPATH "trabalho-pratico/rides.csv"
+#define USERS_FILEPATH "trabalho-pratico/users.csv"
 
 #define LAST_DATE "09/10/2022"
 #define LAST_DATE_DIA 9
