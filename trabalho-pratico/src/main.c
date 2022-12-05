@@ -56,14 +56,40 @@ int main (int argc, char * argv[]) {
 	double time_spent = 0.0;
 	clock_t begin = clock();
 
-	if (!fileExists(DRIVERS_FILEPATH) || !fileExists(RIDES_FILEPATH) || !fileExists(USERS_FILEPATH) || !fileExists(argv[1]))
+	char *folder;
+
+	if(argc == 1) {
+		//ask the user for the folder
+		printf("Please enter the folder path: ");
+		scanf("%s", folder);
+	} else {
+		// Keep the folder where the csv files are located
+		folder = argv[1];
+	}
+
+	printf("Folder: %s\n", folder);
+
+	// Keep the path to the drivers.csv file
+	char drivers_filepath[100];
+	sprintf(drivers_filepath, "%s/%s", folder, DRIVERS_FILEPATH2);
+
+	// Keep the path to the rides.csv file
+	char rides_filepath[100];
+	sprintf(rides_filepath, "%s/%s", folder, RIDES_FILEPATH2);
+
+	// Keep the path to the users.csv file
+	char users_filepath[100];
+	sprintf(users_filepath, "%s/%s", folder, USERS_FILEPATH2);
+
+	if (!fileExists(drivers_filepath) || !fileExists(rides_filepath) || !fileExists(users_filepath) || !fileExists(argv[2]))
 		return 0;
 
-	if (argc == 2){
+	if(argc == 1) {
+		opt = 0;
+	} 
+	else if(argc == 3){
 		if (fileExists(*argv) == 0) return 0;
-		read_queries(argv[1]);
-	} else {
-		printf("Invalid input!\n");
+		read_queries(argv[2], drivers_filepath, rides_filepath, users_filepath);
 	}
 	
 	clock_t end = clock();

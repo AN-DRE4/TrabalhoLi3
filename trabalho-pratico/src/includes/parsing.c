@@ -33,13 +33,13 @@
  * @returns catálogo dos users
  */
 //USERS create_users_catalog(int *bots, int *orgs, int *users) {
-USERS create_users_catalog() {
+USERS create_users_catalog(char *users_path) {
 
 	USERS us = create_users();
 	
 	char line[LINE_BUFFER];
 
-	FILE *f = fopen(USERS_FILEPATH, "r");
+	FILE *f = fopen(users_path, "r");
 
 	fgets(line, LINE_BUFFER, f);
 	
@@ -68,13 +68,13 @@ USERS create_users_catalog() {
  * @returns catálogo dos drivers
  */
 
-DRIVERS create_drivers_catalog() {
+DRIVERS create_drivers_catalog(char *drivers_path) {
 	
 	DRIVERS dr = create_drivers();
 
 	char line[LINE_BUFFER];
 
-	FILE *f = fopen(DRIVERS_FILEPATH, "r");
+	FILE *f = fopen(drivers_path, "r");
 
 	fgets(line, LINE_BUFFER, f);
 	
@@ -103,7 +103,7 @@ DRIVERS create_drivers_catalog() {
  * @returns catálogo das rides
  */
 
-RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver_ride) {
+RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver_ride, char *rides_path) {
 
 	double time_spent = 0.0;
 	clock_t begin = clock();
@@ -112,7 +112,7 @@ RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver
 
 	char line[LINE_BUFFER];
 
-	FILE *f = fopen(RIDES_FILEPATH, "r");
+	FILE *f = fopen(rides_path, "r");
 
 	fgets(line, LINE_BUFFER, f);
 

@@ -35,8 +35,8 @@ int output_n = 1;
  */
 static void get_output_dir_file(char * f){
 
-    mkdir(f,0777);
-	//mkdir(f);
+    //mkdir(f,0777);
+	mkdir(f);
 
 }
 
@@ -52,7 +52,7 @@ static FILE *get_output_file()
 
 	char output_file[50];
 
-	sprintf(output_file, "%s%d%s", "saida/command", output_n, "_output.txt");
+	sprintf(output_file, "%s%d%s", "Resultados/command", output_n, "_output.txt");
 
 	output_n++;
 	// printf("%s\n", output_file);
@@ -269,20 +269,20 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
  * Função que lê as queries solicitadas no ficheiro de input
  *
  */
-void read_queries(char *f)
+void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 {
 
 	ht *ht_repo_colabs = ht_create(TABLE_SIZE);
 	ht *ht_user_ride = ht_create(TABLE_SIZE);
 	ht *ht_driver_ride = ht_create(TABLE_SIZE);
 
-	USERS us = create_users_catalog();
-	DRIVERS ds = create_drivers_catalog();
-	RIDES rs = create_rides_catalog(us, ds, ht_user_ride, ht_driver_ride);
+	USERS us = create_users_catalog(use_path);
+	DRIVERS ds = create_drivers_catalog(dri_path);
+	RIDES rs = create_rides_catalog(us, ds, ht_user_ride, ht_driver_ride, rid_path);
 
 	char line[1024];
 	FILE *input_commands = fopen(f, "r");
-	get_output_dir_file("saida");
+	get_output_dir_file("Resultados");
 	printf("A tabela user_ride tem %d entradas.\n", ht_count(ht_user_ride));
 	while (fgets(line, 1024, input_commands) != NULL)
 	{
