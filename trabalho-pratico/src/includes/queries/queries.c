@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 #include "../define.h"
 #include "../hashtable/hashtable.h"
@@ -24,7 +25,11 @@
 #include "../modules/users/user.h"
 #include "../modules/rides/ride.h"
 
+#include "../interface.h"
+#include "queries.h"
+
 int output_n = 1;
+int opt;
 
 /**
  * @brief Função get_output_dir_file
@@ -60,6 +65,25 @@ static FILE *get_output_file()
 	if (!f)
 		perror("fopen");
 	return f;
+}
+
+/**
+ * @brief Função get_output_file_tests
+ *
+ * Função que cria um ficheiro de output para os testes
+ * 
+ * @returns string com o nome ficheiro de output
+ */
+static FILE* get_output_file_tests() {
+
+  	char output_file[50];
+    
+  	sprintf(output_file, "%s", "Resultados/tests_output.txt");
+
+  	FILE *f = fopen(output_file, "w");
+    if (!f)
+    	perror("fopen");
+    return f;
 }
 
 /**
@@ -172,16 +196,21 @@ static double get_avaliacao_media_driver(DRIVER d, ht *ht_driver_ride, RIDES rs,
  *
  */
 
-static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, ht *ht_driver_ride)
-{
-	FILE *f = get_output_file();
+static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, ht *ht_driver_ride, PAGINACAO pg) {
+	
+	/*FILE *f;
+	if (opt) 
+		f = get_output_file();*/
+
+	printf("test: %s\n", id);
 	int temp = atoi(id);
 	if(temp != 0){
 		DRIVER d = get_driver(ds, id);
 		char *status = get_driver_account_status(d);
 		if(strcmp(status, "inactive") == 0 || d == NULL) {
 			//Se a conta estiver inativa ou o utilizador nao existir, o ficheiro de output é fechado e a função termina
-			fclose(f);
+			//if (opt) 
+			//	fclose(f);
 			return;
 		}
 		else {
@@ -194,8 +223,24 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 			int num_rides = num;
 			double total_aferido = total;
 			//Imprimir no ficheiro de output
-			fprintf(f, "%s;%s;%d;%.3f;%d;%.3f\n", name, gender, age, score, num_rides, total_aferido); 
-			fclose(f);
+			if (opt) {
+				FILE *f = get_output_file();
+				fprintf(f, "%s;%s;%d;%.3f;%d;%.3f\n", name, gender, age, score, num_rides, total_aferido); 
+				fclose(f);
+
+				free(name);
+				free(gender);
+				delete_driver(d);
+			} else {
+				char line[256];
+
+				sprintf(line, "%s|%s|%d|%.3f|%d|%.3f", name, gender, age, score, num_rides, total_aferido);
+				push_pagina(pg, line);
+
+				free(name);
+				free(gender);
+				delete_driver(d);
+			}
 			return;
 		}
 
@@ -205,7 +250,8 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 		char *status = get_user_account_status(u);
 		if(strcmp(status, "inactive") == 0 || u == NULL) {
 			//Se a conta estiver inativa ou o utilizador nao existir, o ficheiro de output é fechado e a função termina
-			fclose(f);
+			//if (opt) 
+			//	fclose(f);
 			return;
 		} else {
 			int num = 0;
@@ -216,9 +262,22 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 			double score = get_avaliacao_media_user(u, ht_user_ride, rs, ds, &num, &total);
 			int num_rides = num;
 			double total_gasto = total;
-			//Imprimir no ficheiro de output
-			fprintf(f, "%s;%s;%d;%.3f;%d;%.3f\n", name, gender, age, score, num_rides, total_gasto); 
-			fclose(f);
+			printf("Tudo ok ate aqui\n");
+			if (opt) {
+				//Imprimir no ficheiro de output
+				FILE *f = get_output_file();
+				fprintf(f, "%s;%s;%d;%.3f;%d;%.3f\n", name, gender, age, score, num_rides, total_gasto); 
+				fclose(f);
+			} else {
+				printf("Vamos \n");
+				char line[256];
+				printf("Vamos 2\n");
+				sprintf(line, "%s|%s|%d|%.3f|%d|%.3f", name, gender, age, score, num_rides, total_gasto);
+				printf("Vamos 3\n");
+				push_pagina(pg, line);
+				printf("Vamos 4\n");
+				return;
+			}
 			return;
 		}
 	}
@@ -272,7 +331,6 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
 void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 {
 
-	ht *ht_repo_colabs = ht_create(TABLE_SIZE);
 	ht *ht_user_ride = ht_create(TABLE_SIZE);
 	ht *ht_driver_ride = ht_create(TABLE_SIZE);
 
@@ -283,7 +341,12 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 	char line[1024];
 	FILE *input_commands = fopen(f, "r");
 	get_output_dir_file("Resultados");
-	printf("A tabela user_ride tem %d entradas.\n", ht_count(ht_user_ride));
+    FILE *test_file = get_output_file_tests();
+
+	double time_spent;
+    clock_t begin;
+	clock_t end;
+
 	while (fgets(line, 1024, input_commands) != NULL)
 	{
 		remove_possible_new_line(line);
@@ -303,7 +366,12 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 		switch (atoi(query_param[0]))
 		{
 		case 1:
-			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride);
+			time_spent = 0;
+			begin = clock();
+			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride, NULL);
+			end = clock();
+			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+    		fprintf(test_file,"query 1 done in %f\n", time_spent);
 			break;
 		case 2:
 			//TODO
@@ -351,5 +419,74 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 	delete_drivers(ds);
 	delete_rides(rs);
 
-	ht_destroy_no_mem_cpy(ht_repo_colabs);
+	ht_destroy_no_mem_cpy(ht_user_ride);
+	ht_destroy_no_mem_cpy(ht_driver_ride);
+}
+
+/**
+ * @brief Função read_queries_2
+ *
+ * Função que lê as queries solicitadas no input de IO()
+ * 
+ */
+void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_path, char* rid_path, char* use_path) { // deve receber numero da query e o array de argumentos
+
+	ht *ht_user_ride = ht_create(TABLE_SIZE);
+	ht *ht_driver_ride = ht_create(TABLE_SIZE);
+
+	USERS us = create_users_catalog(use_path);
+	DRIVERS ds = create_drivers_catalog(dri_path);
+	RIDES rs = create_rides_catalog(us, ds, ht_user_ride, ht_driver_ride, rid_path);
+
+	get_output_dir_file("Resultados");
+
+	double time_spent;
+    clock_t begin;
+	clock_t end;
+
+	switch (query) {
+		case 1:
+			time_spent = 0;
+			begin = clock();
+			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride, pg);
+			printf("query 1 done\n");
+			end = clock();
+    		time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+			printf("fim");
+			break;
+		case 2:
+			//
+			break;
+		case 3:
+			//
+			break;
+		case 4:
+			//
+			break;
+		case 5:
+			//
+			break;
+		case 6:
+			//
+			break;
+
+		case 7:
+			//
+			break;
+		case 8:
+			//
+			break;
+		case 9:
+			//
+			break;
+
+	}
+
+	delete_users(us);
+	delete_drivers(ds);
+	delete_rides(rs);
+
+	ht_destroy(ht_user_ride, NULL);
+	ht_destroy(ht_driver_ride, NULL);
+
 }
