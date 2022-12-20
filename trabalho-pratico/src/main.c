@@ -128,9 +128,7 @@ void interface_IO(char *drivers_path, char *rides_path, char *users_path){
 			scanf("%s",n_data);
 			putchar('\n');
 			query_param[1] = n_data;
-			printf("Vamos comecar agora a query :))\n");
 			read_queries_2(1,query_param,pg, drivers_path, rides_path, users_path);
-			printf("Acabamos a query\n");
 			sub_interface_IO(pg);
             break;
 
@@ -190,13 +188,10 @@ int main (int argc, char * argv[]) {
 		char tmp[256];
 		scanf("%s", tmp);
 		sprintf(folder, "%s", tmp);
-		printf("Folder path: %s\n", folder);
 	} else {
 		// Keep the folder where the csv files are located
 		sprintf(folder, "%s", argv[1]);
 	}
-
-	printf("Folder: %s\n", folder);
 
 	// Keep the path to the drivers.csv file
 	char drivers_filepath[512];
@@ -209,8 +204,6 @@ int main (int argc, char * argv[]) {
 	// Keep the path to the users.csv file
 	char users_filepath[512];
 	sprintf(users_filepath, "%s/%s", folder, USERS_FILEPATH2);
-
-	printf("test");
 
 	if (!fileExists(drivers_filepath) || !fileExists(rides_filepath) || !fileExists(users_filepath))
 		return 0;

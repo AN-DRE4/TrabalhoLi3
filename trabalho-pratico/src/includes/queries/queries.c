@@ -202,7 +202,6 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 	if (opt) 
 		f = get_output_file();*/
 
-	printf("test: %s\n", id);
 	int temp = atoi(id);
 	if(temp != 0){
 		DRIVER d = get_driver(ds, id);
@@ -262,20 +261,15 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 			double score = get_avaliacao_media_user(u, ht_user_ride, rs, ds, &num, &total);
 			int num_rides = num;
 			double total_gasto = total;
-			printf("Tudo ok ate aqui\n");
 			if (opt) {
 				//Imprimir no ficheiro de output
 				FILE *f = get_output_file();
 				fprintf(f, "%s;%s;%d;%.3f;%d;%.3f\n", name, gender, age, score, num_rides, total_gasto); 
 				fclose(f);
 			} else {
-				printf("Vamos \n");
 				char line[256];
-				printf("Vamos 2\n");
 				sprintf(line, "%s|%s|%d|%.3f|%d|%.3f", name, gender, age, score, num_rides, total_gasto);
-				printf("Vamos 3\n");
 				push_pagina(pg, line);
-				printf("Vamos 4\n");
 				return;
 			}
 			return;
@@ -366,7 +360,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 		switch (atoi(query_param[0]))
 		{
 		case 1:
-			time_spent = 0;
+			time_spent = 0.0;
 			begin = clock();
 			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride, NULL);
 			end = clock();
@@ -449,10 +443,8 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 			time_spent = 0;
 			begin = clock();
 			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride, pg);
-			printf("query 1 done\n");
 			end = clock();
     		time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-			printf("fim");
 			break;
 		case 2:
 			//
@@ -486,7 +478,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 	delete_drivers(ds);
 	delete_rides(rs);
 
-	ht_destroy(ht_user_ride, NULL);
-	ht_destroy(ht_driver_ride, NULL);
+	ht_destroy_no_mem_cpy(ht_user_ride);
+	ht_destroy_no_mem_cpy(ht_driver_ride);
 
 }
