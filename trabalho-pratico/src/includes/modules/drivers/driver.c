@@ -291,9 +291,9 @@ int get_driver_age(void *r) {
     //Comparar a data de nascimento com a data atual e retornar a idade
     
     if(mes_i > LAST_DATE_MES || (mes_i == LAST_DATE_MES && dia_i >= LAST_DATE_DIA))
-        return LAST_DATE_ANO - ano_i;
-    else
         return LAST_DATE_ANO - ano_i - 1;
+    else
+        return LAST_DATE_ANO - ano_i;
 }
 
 /**
