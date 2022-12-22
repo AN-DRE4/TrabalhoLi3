@@ -7,6 +7,7 @@
 #define PARSER_H
 
 char *strsep(char **stringp, const char *delim);
+int is_equal_ignore_case(const char* word, const char* target);
 int is_valid_date(char *s);
 int is_valid_number(char *s);
 int is_valid_gender(char *s);

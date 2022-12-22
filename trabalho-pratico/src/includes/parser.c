@@ -89,6 +89,28 @@ static char* remove_spaces(char *s) {
 }
 
 /**
+ * @brief Função is_equal_ignore_case
+ * 
+ * Função que compara duas strings ignorando as diferenças entre maiúsculas e minúsculas
+ * 
+ * @returns int
+*/
+
+int is_equal_ignore_case(const char* word, const char* target) {
+    if (strlen(word) != strlen(target)) {
+        return 0;
+    }
+
+    for (int i = 0; i < strlen(word); i++) {
+        if (tolower(word[i]) != tolower(target[i])) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+/**
  * @brief Função is_valid_date
  *
  * Função que verifica se a string é uma data válida
@@ -197,7 +219,7 @@ int is_valid_pay_method(char *s) {
  * @returns bool
  */
 int is_valid_car_class(char *s) {
-	return (strcmp(s, "green") == 0 || strcmp(s, "premium") == 0 || strcmp(s, "basic") == 0) ? 1 : 0;
+	return (is_equal_ignore_case(s, "green") == 1 || is_equal_ignore_case(s, "premium") == 1 || is_equal_ignore_case(s, "basic") == 1) ? 1 : 0;
 }
 
 /**

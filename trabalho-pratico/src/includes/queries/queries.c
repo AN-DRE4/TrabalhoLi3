@@ -40,8 +40,8 @@ int opt;
  */
 static void get_output_dir_file(char * f){
 
-    mkdir(f,0777);
-    //mkdir(f);
+    //mkdir(f,0777);
+    mkdir(f);
 
 }
 
@@ -206,10 +206,12 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 	if(temp != 0){
 		DRIVER d = get_driver(ds, id);
 		char *status = get_driver_account_status(d);
-		if(strcmp(status, "inactive") == 0 || d == NULL) {
+		if(is_equal_ignore_case(status, "inactive") == 1 || d == NULL) {
 			//Se a conta estiver inativa ou o utilizador nao existir, o ficheiro de output é fechado e a função termina
 			//if (opt) 
-			//	fclose(f);
+			FILE *f = get_output_file();
+			fclose(f);
+			printf("Status: %s\n", status);
 			return;
 		}
 		else {
@@ -247,10 +249,12 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 	} else {
 		USER u = get_user(us, id);
 		char *status = get_user_account_status(u);
-		if(strcmp(status, "inactive") == 0 || u == NULL) {
+		if(is_equal_ignore_case(status, "inactive") == 1 || u == NULL) {
 			//Se a conta estiver inativa ou o utilizador nao existir, o ficheiro de output é fechado e a função termina
 			//if (opt) 
-			//	fclose(f);
+			FILE *f = get_output_file();
+			fclose(f);
+			printf("Status: %s\n", status);
 			return;
 		} else {
 			int num = 0;
@@ -315,6 +319,27 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
         }
     }
 }
+
+/**
+ * @brief Função query_8
+ * 
+ * Função que imprime no ficheiro de output os todas as viagens onde 
+ * o utilizador e o condutor são do mesmo género e onde ambos têm uma
+ * idade igual ou superior à passada.
+*/
+
+/*static void query_8(char *gender, char* idade, USERS us, DRIVERS ds, RIDES rs, PAGINACAO pg) {
+	int age = atoi(idade);
+	if (age <= 0) {
+		return;
+	}
+	//Percorrer todas as viagens e verificar se o condutor e o utilizador são do mesmo género e se têm uma idade igual ou superior à passada
+	for (int i = 0; i < get_num_rides(rs); i++) {
+		RIDE r = get_ride(rs, i);
+		DRIVER d = get_driver(ds, get_ride_driver_id(r));
+		USER u = get_user(us, get_ride_user_id(r));
+	}
+}*/
 
 /**
  * @brief Função read_queries
