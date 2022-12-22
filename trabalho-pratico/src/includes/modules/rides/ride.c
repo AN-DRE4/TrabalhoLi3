@@ -255,9 +255,9 @@ int is_valid_ride(RIDE r) {
         !(is_valid_number(r->driver)) &&
         !(is_valid_number(r->distance)))
 		return 0;
-    if (!(is_valid_float(r->score_user)) && 
-        !(is_valid_float(r->score_driver)) &&
-        !(is_valid_float(r->tip)))
+    if (!(is_valid_double(r->score_user)) && 
+        !(is_valid_double(r->score_driver)) &&
+        !(is_valid_double(r->tip)))
         return 0;
 	if (!(is_valid_date(r->date)))
 		return 0;

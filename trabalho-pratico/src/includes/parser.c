@@ -174,14 +174,14 @@ int is_valid_number(char *s) {
 }
 
 /**
- * @brief Função is_valid_float
+ * @brief Função is_valid_double
  * 
- * Função que verifica se a string é um float válido
+ * Função que verifica se a string é um double válido
  * 
  * @returns bool
  */
 
-int is_valid_float(char *s) {
+int is_valid_double(char *s) {
 	char *p = s;
 	if (p[0] == '\0' || p[0] == '-')
 		return 0;
