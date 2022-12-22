@@ -174,6 +174,33 @@ int is_valid_number(char *s) {
 }
 
 /**
+ * @brief Função is_valid_float
+ * 
+ * Função que verifica se a string é um float válido
+ * 
+ * @returns bool
+ */
+
+int is_valid_float(char *s) {
+	char *p = s;
+	if (p[0] == '\0' || p[0] == '-')
+		return 0;
+	int count = 0;
+	while (*p)
+	{
+		if (*p == '.') {
+			count++;
+			if (count > 1)
+				return 0;
+		}
+		else if (*p < '0' || *p > '9')	
+			return 0;
+		p++;
+	}
+	return 1;
+}
+
+/**
  * @brief Função is_valid_gender
  *
  * Função que verifica se o genero é válido
