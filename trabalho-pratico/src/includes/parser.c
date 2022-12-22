@@ -221,17 +221,6 @@ int is_valid_gender(char *s) {
 }
 
 /**
- * @brief Função is_valid_payment_method
- * 
- * Função que verifica se o método de pagamento é válido
- * 
- * @returns bool
- */
-int is_valid_payment_method(char *s) {
-	return (strcmp(s, "cash") == 0 || strcmp(s, "debit_card") == 0 || strcmp(s, "credit_card") == 0) ? 1 : 0;
-}
-
-/**
  * @brief Função is_valid_name
  *
  * Função que verifica se a string é um nome válido
@@ -267,35 +256,6 @@ int is_valid_pay_method(char *s) {
  */
 int is_valid_car_class(char *s) {
 	return (is_equal_ignore_case(s, "green") == 1 || is_equal_ignore_case(s, "premium") == 1 || is_equal_ignore_case(s, "basic") == 1) ? 1 : 0;
-}
-
-/**
- * @brief Função is_valid_license_plate
- *
- * Função que verifica se a matricula de um carro é válida
- * Formato XX-XX-XX
- * 
- * @returns bool
- */
-
-int is_valid_license_plate(char *s) {
-	char *p = s;
-	if (strlen(p) != 8)
-		return 0;
-	for (int i = 0; i < 8; i++)
-	{
-		if (i == 2 || i == 5)
-		{
-			if (p[i] != '-')
-				return 0;
-		}
-		else
-		{
-			if ((p[i] < 'A' || p[i] > 'Z') && (p[i] < '0' || p[i] > '9'))
-				return 0;
-		}
-	}
-	return 1;
 }
 
 /**

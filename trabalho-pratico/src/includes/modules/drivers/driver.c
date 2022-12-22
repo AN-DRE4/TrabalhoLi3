@@ -206,11 +206,11 @@ int is_valid_driver(DRIVER r) {
         return 0;
     if (!(is_valid_car_class(r->car_class)))
         return 0;
-    if (!(is_valid_license_plate(r->license_plate)))
-        return 0;
 	if ((!(is_valid_date(r->birth_day))) || (!(is_valid_date(r->account_creation))))
 		return 0;
-	if (!(is_valid_name(r->name)) || !(is_valid_name(r->city)))
+	if (!(is_valid_name(r->name)) || 
+	    !(is_valid_name(r->city)) || 
+		!(is_valid_name(r->license_plate)))
 		return 0;
 	return 1;
 }
