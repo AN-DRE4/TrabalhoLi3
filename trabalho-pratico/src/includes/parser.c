@@ -236,18 +236,6 @@ int is_valid_name(char *s) {
 }
 
 /**
- * @brief Função is_valid_pay_method
- * 
- * Função que verifica se o método de pagamento é válido
- * 
- * @returns bool
- */
-
-int is_valid_pay_method(char *s) {
-	return (strcmp(s, "cash") == 0 || strcmp(s, "credit_card") == 0 || strcmp(s, "debit_card") == 0) ? 1 : 0;
-}
-
-/**
  * @brief Função is_valid_car_class
  *
  * Função que verifica se a classe do carro é válida
