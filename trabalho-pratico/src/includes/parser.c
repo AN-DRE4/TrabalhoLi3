@@ -117,20 +117,40 @@ int is_equal_ignore_case(const char* word, const char* target) {
  * 
  * @returns bool
  */
-int is_valid_date(char *s) {
-		int year, month, day, hour, minutes, seconds, matches;
+int is_valid_date(const char* date) {
+  int day, month, year;
+  // Parse the day, month, and year from the input string
+  sscanf(date, "%d/%d/%d", &day, &month, &year);
 
-	matches = sscanf(s,"%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minutes, &seconds);
-	if (matches == 6 && ((year == 2005 && month > 4) || (year == 2005 && month == 4 && day >=7) || year > 2005) && year <= 2021 && strlen(s) == 19)
-	{
-		if ((((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day <= 31) || ((month == 4 || month == 6 || month == 9 || month == 11) && day <= 30) || (month == 2 && ((((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) && day <= 29) || day <= 28))) && day > 0)
-		{
-			if (hour >= 0 && hour <= 23 && minutes >= 0 && minutes <= 59 && seconds >= 0 && seconds <= 59)
-				return 1;
-		}
+  // Check if the month is out of range
+  if (month < 1 || month > 12) {
+    return 0;
+  }
 
-	}
-	return 0;
+  // Check if the day is out of range for the given month
+  if (day < 1 || day > 31) {
+    return 0;
+  }
+  // Check for months with fewer than 31 days
+  if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
+    return 0;
+  }
+  // Check for February
+  if (month == 2) {
+    // Check for leap years
+    if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+      if (day > 29) {
+        return 0;
+      }
+    } else {
+      if (day > 28) {
+        return 0;
+      }
+    }
+  }
+
+  // If all checks pass, the date is valid
+  return 1;
 }
 
 /**
