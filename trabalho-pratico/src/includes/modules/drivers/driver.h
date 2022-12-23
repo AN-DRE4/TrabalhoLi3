@@ -30,6 +30,10 @@ char* get_driver_gender(void* r);
 char* get_driver_birth_day(void* r);
 int get_driver_age(void *r);
 char* get_driver_car_class(void* r);
+char* get_driver_licence_plate(void* r);
+char* get_driver_city(void* r);
+char* get_driver_account_creation(void* r);
+int get_driver_account_age(void *r);
 char* get_driver_account_status(void* r);
 
 void set_driver(DRIVER r, char *line);

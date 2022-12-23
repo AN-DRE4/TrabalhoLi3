@@ -263,6 +263,47 @@ int get_user_age(void *r) {
 }
 
 /**
+ * @brief Função get_user_account_creation
+ * 
+ * Função que retorna a data de criação de conta de um user
+ */
+
+char *get_user_account_creation(void *r) {
+    USER rc = (USER) r;
+    return strdup(rc->account_creation);
+}
+
+/**
+ * @brief Função get_user_account_age
+ * 
+ * Função que retorna a idade da conta de um user
+ * 
+ * @returns idade da conta
+ */
+
+int get_user_account_age(void *r) {
+    USER rc = (USER) r;
+    char *str = get_user_account_creation(rc);
+    char *token = strsep(&str, "/");
+    char *dia = token;
+    token = strsep(&str, "/");
+    char *mes = token;
+    token = strsep(&str, "/");
+    char *ano = token;
+
+    int dia_i = atoi(dia);
+    int mes_i = atoi(mes);
+    int ano_i = atoi(ano);
+
+    //Comparar a data de criação da conta com a data atual e retornar a idade da conta
+    
+    if(mes_i > LAST_DATE_MES || (mes_i == LAST_DATE_MES && dia_i >= LAST_DATE_DIA))
+        return LAST_DATE_ANO - ano_i - 1;
+    else
+        return LAST_DATE_ANO - ano_i;
+}
+
+/**
  * @brief Função get_user_account_status
  * 
  * Função que retorna o estado de conta de um user

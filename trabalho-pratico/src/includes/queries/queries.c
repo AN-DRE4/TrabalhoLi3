@@ -40,8 +40,8 @@ int opt;
  */
 static void get_output_dir_file(char * f){
 
-    //mkdir(f,0777);
-    mkdir(f);
+    mkdir(f,0777);
+    //mkdir(f);
 
 }
 
@@ -211,7 +211,6 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 			//if (opt) 
 			FILE *f = get_output_file();
 			fclose(f);
-			printf("Status: %s\n", status);
 			return;
 		}
 		else {
@@ -254,7 +253,6 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 			//if (opt) 
 			FILE *f = get_output_file();
 			fclose(f);
-			printf("Status: %s\n", status);
 			return;
 		} else {
 			int num = 0;
@@ -341,6 +339,96 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
 	}
 }*/
 
+int compare_rides1(const void* a, const void* b, USERS users, DRIVERS drivers) {
+  RIDE ride_a = *(RIDE*)a;
+  RIDE ride_b = *(RIDE*)b;
+
+  // Get the driver and user for each ride
+  DRIVER driver_a = get_driver(drivers, get_ride_driver(ride_a));
+  USER user_a = get_user(users, get_ride_user(ride_a));
+  DRIVER driver_b = get_driver(drivers, get_ride_driver(ride_b));
+  USER user_b = get_user(users, get_ride_user(ride_b));
+
+  // Compare the driver ages
+  if (get_driver_account_age(driver_a) != get_driver_account_age(driver_b)) {
+    return get_driver_account_age(driver_a) - get_driver_account_age(driver_b);
+  }
+
+  // If the driver ages are the same, compare the user ages
+  if (get_user_account_age(user_a) != get_user_account_age(user_b)) {
+    return get_user_account_age(user_a) - get_user_account_age(user_b);
+  }
+
+  // If the driver and user ages are the same, compare the ride ids
+  return get_ride_id(ride_a) - get_ride_id(ride_b);
+}
+
+int compare_rides(void* two, const void* a, const void* b) {
+	//save both elems of two
+	USERS users = ((void**)two)[0];
+	DRIVERS drivers = ((void**)two)[1];
+	return compare_rides1(a, b, users, drivers);
+}
+
+
+static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES rides, PAGINACAO pg) {
+	// Open a file for writing
+	FILE* fp = get_output_file();
+	if (fp == NULL) {
+		printf("Error opening file!\n");
+		return;
+	}
+
+	int i = 0, j = 0;
+	void *u = NULL;
+	ht *temp = get_rides_table(rides);
+
+	RIDE *matching_rides = malloc(ht_count(temp) * sizeof(RIDE));
+	if (matching_rides == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+  	// Iterate through all the rides in the rides hashtable
+  	//for (int i = 0; i < rides->size; i++) {
+	int num_matching_rides = 0;
+	while(ht_get_s(temp, &i, &j, &u)!=NULL) {
+		//struct ride* current_ride = rides->entries[i];
+		//if (u == NULL) continue;
+
+		// Get the driver and user for the current ride
+		DRIVER current_driver = get_driver(drivers, get_ride_driver(u));
+		USER current_user = get_user(users, get_ride_user(u));
+		
+		//printf("BRUH");
+
+		if(is_equal_ignore_case(get_driver_account_status(current_driver), "active") == 1 && is_equal_ignore_case(get_user_account_status(current_user), "active") == 1) {
+			// Check if the driver and user have the same gender and are at least the age specified in the parameter
+			if (strcmp(get_driver_gender(current_driver), gender) == 0 && strcmp(get_user_gender(current_user), gender) == 0 && get_driver_account_age(current_driver) >= atoi(age) && get_user_account_age(current_user) >= atoi(age)) {
+				// If they match, print the ride id to the file
+				matching_rides[num_matching_rides++] = u;
+				//fprintf(fp, "%s;%s;%s;%s\n", get_ride_driver(u), get_driver_name(current_driver), get_ride_user(u), get_user_name(current_user)); 
+			}
+		}
+	}
+	printf("Number of matching rides: %d\n", num_matching_rides);
+
+	//store both users and drivers in an array
+	void *two[2];
+	two[0] = users;
+	two[1] = drivers;
+
+	qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
+
+	for (int i = 0; i < num_matching_rides; i++) {
+		fprintf(fp, "%s;%s;%s;%s\n", get_ride_driver(matching_rides[i]), get_driver_name(get_driver(drivers, get_ride_driver(matching_rides[i]))), get_ride_user(matching_rides[i]), get_user_name(get_user(users, get_ride_user(matching_rides[i])))); 
+	}
+
+	// Close the file
+	free(matching_rides);
+	fclose(fp);
+}
+
 /**
  * @brief Função read_queries
  *
@@ -366,8 +454,12 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
     clock_t begin;
 	clock_t end;
 
+	int idk = 1;
+
 	while (fgets(line, 1024, input_commands) != NULL)
 	{
+		printf("Number: %d\n", idk);
+		idk++;
 		remove_possible_new_line(line);
 
 		char *temp_line = strdup(line), *os;
@@ -415,12 +507,13 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 		case 7:
 		//TODO
 			query_7(query_param[1], ds, rs);
-			break;
+			break;*/
 		case 8:
 		//TODO
-			query_8(atoi(query_param[1]), query_param[2], ds, rs);
+			printf("BRUH1\n");
+			query_8(query_param[1], query_param[2], us, ds, rs, NULL);
 			break;
-		case 9:
+		/*case 9:
 		//TODO
 			query_9(atoi(query_param[1]), us, ds, rs);
 			break;*/

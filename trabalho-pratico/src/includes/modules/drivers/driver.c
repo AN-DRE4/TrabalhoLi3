@@ -309,6 +309,75 @@ char* get_driver_car_class(void* r) {
 }
 
 /**
+ * @brief Função get_driver_license_plate
+ *
+ * Função que devolve uma copia do license_plate de um driver
+ * 
+ * @returns license_plate de um driver
+ */
+
+char* get_driver_license_plate(void* r) {
+	DRIVER rc = (DRIVER) r;
+	return strdup(rc->license_plate);
+}
+
+/**
+ * @brief Função get_driver_city
+ *
+ * Função que devolve uma copia do city de um driver
+ * 
+ * @returns city de um driver
+ */
+
+char* get_driver_city(void* r) {
+	DRIVER rc = (DRIVER) r;
+	return strdup(rc->city);
+}
+
+/**
+ * @brief Função get_driver_account_creation
+ *
+ * Função que devolve uma copia do account_creation de um driver
+ * 
+ * @returns account_creation de um driver
+ */
+
+char* get_driver_account_creation(void* r) {
+	DRIVER rc = (DRIVER) r;
+	return strdup(rc->account_creation);
+}
+
+/**
+ * @brief Função get_driver_account_age
+ * 
+ * Função que retorna a idade da conta de um driver
+ * 
+ * @returns idade da conta
+ */
+
+int get_driver_account_age(void *r) {
+	DRIVER rc = (DRIVER) r;
+	char *str = get_driver_account_creation(rc);
+	char *token = strsep(&str, "/");
+	char *dia = token;
+	token = strsep(&str, "/");
+	char *mes = token;
+	token = strsep(&str, "/");
+	char *ano = token;
+
+	int dia_i = atoi(dia);
+	int mes_i = atoi(mes);
+	int ano_i = atoi(ano);
+
+	//Comparar a data de nascimento com a data atual e retornar a idade
+	
+	if(mes_i > LAST_DATE_MES || (mes_i == LAST_DATE_MES && dia_i >= LAST_DATE_DIA))
+		return LAST_DATE_ANO - ano_i - 1;
+	else
+		return LAST_DATE_ANO - ano_i;
+}
+
+/**
  * @brief Função get_driver_account_status
  * 
  * Função que devolve uma copia do account_status de um driver

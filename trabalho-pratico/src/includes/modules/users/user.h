@@ -27,6 +27,8 @@ char *get_user_name(void *r);
 char *get_user_gender(void *r);
 char *get_user_birth_date(void *r);
 int get_user_age(void *r);
+char *get_user_account_creation(void *r);
+int get_user_account_age(void *r);
 char *get_user_account_status(void *r);
 
 void set_user(USER r, char *s);
