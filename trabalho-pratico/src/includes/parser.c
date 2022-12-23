@@ -269,6 +269,49 @@ int hash(char *key) {
 }
 
 /**
+ * @brief Função compare_dates
+ * 
+ * Função que compara duas datas e retorna -1 se a primeira for menor, 1 se a primeira for maior e 0 se forem iguais
+ * 
+ * @returns int
+*/
+
+int compare_dates(const char* date1, const char* date2) {
+  int day1, month1, year1;
+  int day2, month2, year2;
+
+  // Parse the day, month, and year from the first date
+  sscanf(date1, "%d/%d/%d", &day1, &month1, &year1);
+
+  // Parse the day, month, and year from the second date
+  sscanf(date2, "%d/%d/%d", &day2, &month2, &year2);
+
+  // Compare the years
+  if (year1 < year2) {
+    return -1;
+  } else if (year1 > year2) {
+    return 1;
+  } else {
+    // If the years are equal, compare the months
+    if (month1 < month2) {
+      return -1;
+    } else if (month1 > month2) {
+      return 1;
+    } else {
+      // If the months are equal, compare the days
+      if (day1 < day2) {
+        return -1;
+      } else if (day1 > day2) {
+        return 1;
+      } else {
+        // If the days are equal, the dates are equal
+        return 0;
+      }
+    }
+  }
+}
+
+/**
  * @brief Função file_count
  *
  * Conta o número de linhas existentes num dado ficheiro

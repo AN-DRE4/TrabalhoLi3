@@ -40,8 +40,8 @@ int opt;
  */
 static void get_output_dir_file(char * f){
 
-    mkdir(f,0777);
-    //mkdir(f);
+    //mkdir(f,0777);
+    mkdir(f);
 
 }
 
@@ -340,6 +340,7 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
 }*/
 
 int compare_rides1(const void* a, const void* b, USERS users, DRIVERS drivers) {
+	//printf("aqui\n");
   RIDE ride_a = *(RIDE*)a;
   RIDE ride_b = *(RIDE*)b;
 
@@ -349,18 +350,26 @@ int compare_rides1(const void* a, const void* b, USERS users, DRIVERS drivers) {
   DRIVER driver_b = get_driver(drivers, get_ride_driver(ride_b));
   USER user_b = get_user(users, get_ride_user(ride_b));
 
+	/*printf("driver_a: %s\n", get_driver_id(driver_a));
+	printf("driver_b: %s\n", get_driver_id(driver_b));
+	printf("user_a: %s\n", get_user_username(user_a));
+	printf("user_b: %s\n", get_user_username(user_b));*/
+
   // Compare the driver ages
-  if (get_driver_account_age(driver_a) != get_driver_account_age(driver_b)) {
-    return get_driver_account_age(driver_a) - get_driver_account_age(driver_b);
+  if (compare_dates(get_driver_account_creation(driver_a), get_driver_account_creation(driver_b)) != 0) {
+	//printf("Teste1\n");
+    return compare_dates(get_driver_account_creation(driver_a), get_driver_account_creation(driver_b));
   }
 
   // If the driver ages are the same, compare the user ages
-  if (get_user_account_age(user_a) != get_user_account_age(user_b)) {
-    return get_user_account_age(user_a) - get_user_account_age(user_b);
+  if (compare_dates(get_user_account_creation(user_a), get_user_account_creation(user_b)) != 0) {
+	//printf("Teste2\n");
+    return compare_dates(get_user_account_creation(user_a), get_user_account_creation(user_b));
   }
 
   // If the driver and user ages are the same, compare the ride ids
-  return get_ride_id(ride_a) - get_ride_id(ride_b);
+	//printf("Teste3\n");
+  return atoi(get_ride_id(ride_a)) - atoi(get_ride_id(ride_b)); 
 }
 
 int compare_rides(void* two, const void* a, const void* b) {
@@ -412,6 +421,7 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 		}
 	}
 	printf("Number of matching rides: %d\n", num_matching_rides);
+	printf("Number of rides: %d\n", ht_count(temp));
 
 	//store both users and drivers in an array
 	void *two[2];

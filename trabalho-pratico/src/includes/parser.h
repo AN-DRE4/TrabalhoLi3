@@ -13,6 +13,7 @@ int is_valid_number(char *s);
 int is_valid_double(char *s);
 int is_valid_gender(char *s);
 int is_valid_car_class(char *s);
+int compare_dates(const char* date1, const char* date2);
 int is_valid_account_status(char *s);
 int is_valid_name(char *s);
 int elem_list(char *s);
