@@ -382,11 +382,6 @@ int compare_rides(void* two, const void* a, const void* b) {
 
 static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES rides, PAGINACAO pg) {
 	// Open a file for writing
-	FILE* fp = get_output_file();
-	if (fp == NULL) {
-		printf("Error opening file!\n");
-		return;
-	}
 
 	int i = 0, j = 0;
 	void *u = NULL;
@@ -430,13 +425,31 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 
 	qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
 
+	FILE *fp;
+
+	char line[256];
+	if (opt) {
+		fp = get_output_file();
+		if (fp == NULL) {
+				printf("Error opening file!\n");
+				return;
+		}
+	}
 	for (int i = 0; i < num_matching_rides; i++) {
-		fprintf(fp, "%s;%s;%s;%s\n", get_ride_driver(matching_rides[i]), get_driver_name(get_driver(drivers, get_ride_driver(matching_rides[i]))), get_ride_user(matching_rides[i]), get_user_name(get_user(users, get_ride_user(matching_rides[i])))); 
+		if (opt) {
+			
+			fprintf(fp, "%s;%s;%s;%s\n", get_ride_driver(matching_rides[i]), get_driver_name(get_driver(drivers, get_ride_driver(matching_rides[i]))), get_ride_user(matching_rides[i]), get_user_name(get_user(users, get_ride_user(matching_rides[i])))); 
+			//fclose(fp);
+		} else {
+			sprintf(line, "%s|%s|%s|%s\n", get_ride_driver(matching_rides[i]), get_driver_name(get_driver(drivers, get_ride_driver(matching_rides[i]))), get_ride_user(matching_rides[i]), get_user_name(get_user(users, get_ride_user(matching_rides[i]))));
+			push_pagina(pg, line);
+			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
+		}
 	}
 
 	// Close the file
 	free(matching_rides);
-	fclose(fp);
+	if(opt) fclose(fp);
 }
 
 /**
@@ -520,7 +533,6 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			break;*/
 		case 8:
 		//TODO
-			printf("BRUH1\n");
 			query_8(query_param[1], query_param[2], us, ds, rs, NULL);
 			break;
 		/*case 9:
@@ -594,7 +606,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 			//
 			break;
 		case 8:
-			//
+			query_8(query_param[1], query_param[2], us, ds, rs, pg);
 			break;
 		case 9:
 			//

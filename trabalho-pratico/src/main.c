@@ -157,9 +157,17 @@ void interface_IO(char *drivers_path, char *rides_path, char *users_path){
             break;
 
         case 8 :
-			//Stuff for query 8
+            puts("Insira o género:\n");
+			scanf("%s",n_data);
+            puts("Insira a idade:\n");
+            scanf("%s",data1);
+			putchar('\n');
+			query_param[1] = n_data;
+            query_param[2] = data1;
+			read_queries_2(8,query_param,pg, drivers_path, rides_path, users_path);
+            printf("Tamanho da pagina: %d\n", get_pg_size(pg));
+			sub_interface_IO(pg);            
             break;
-
         case 9 :
 			//Stuff for query 9
             break;
