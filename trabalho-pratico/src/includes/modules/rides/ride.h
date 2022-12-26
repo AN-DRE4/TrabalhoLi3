@@ -26,8 +26,10 @@ void set_ride_tip(RIDE r, char *s);
 void set_ride_comment(RIDE r, char *s);
 
 char *get_ride_id(void *r);
+char *get_ride_date(void *r);
 char *get_ride_driver(void *r);
 char *get_ride_user(void *r);
+char *get_ride_city(void *r);
 char *get_ride_distance(void *r);
 char *get_ride_score_user(void *r);
 char *get_ride_score_driver(void *r);

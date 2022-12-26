@@ -40,8 +40,8 @@ int opt;
  */
 static void get_output_dir_file(char * f){
 
-    mkdir(f,0777);
-    //mkdir(f);
+    //mkdir(f,0777);
+    mkdir(f);
 
 }
 
@@ -339,6 +339,67 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
 	}
 }*/
 
+static void query_6(char* city, char* start_date, char* end_date, RIDES rides, PAGINACAO pg) {
+	// Convert the dates to time_t values
+	/*struct tm start_tm, end_tm;
+	memset(&start_tm, 0, sizeof(struct tm));
+	memset(&end_tm, 0, sizeof(struct tm));
+	sscanf(start_date, "%d/%d/%d", &start_tm.tm_mday, &start_tm.tm_mon, &start_tm.tm_year);
+	sscanf(end_date, "%d/%d/%d", &end_tm.tm_mday, &end_tm.tm_mon, &end_tm.tm_year);
+	start_tm.tm_mon--; // tm_mon is 0-indexed
+	end_tm.tm_mon--;
+	start_tm.tm_year -= 1900; // tm_year is the number of years since 1900
+	end_tm.tm_year -= 1900;
+	time_t start_time = mktime(&start_tm);
+	time_t end_time = mktime(&end_tm);*/
+
+	int i = 0, j = 0;
+	void *u = NULL;
+	ht *rides_ht = get_rides_table(rides);
+
+	// Create an array to hold the distances of the matching rides
+	float* distances = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (distances == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+	// Iterate through all the rides in the rides hashtable and add the distances of the matching rides to the array
+	int num_distances = 0;
+	while(ht_get_s(rides_ht, &i, &j, &u)!=NULL) {
+		if (u == NULL) continue;
+
+		// Check if the ride is in the specified city and within the specified date range
+		if (strcmp(get_ride_city(u), city) == 0 && compare_dates(get_ride_date(u), start_date) >= 0 && compare_dates(get_ride_date(u), end_date) <= 0) {
+			// If the ride matches, add its distance to the array
+			distances[num_distances++] = atof(get_ride_distance(u));
+		}
+	}
+
+	// Calculate the average distance
+	float average = 0;
+	for (int i = 0; i < num_distances; i++) {
+		average += distances[i];
+	}
+	average /= num_distances;
+
+	// Free the array and return the median
+	free(distances);
+
+	//print into a folder the median distance
+	if (opt) {
+		FILE *f = get_output_file();
+		fprintf(f, "%.3f", average);
+		fclose(f);
+	} else {
+		char line[256];
+		sprintf(line, "%.3f", average);
+		push_pagina(pg, line);
+	}
+
+	return;
+}
+
 int compare_rides1(const void* a, const void* b, USERS users, DRIVERS drivers) {
 	//printf("aqui\n");
   RIDE ride_a = *(RIDE*)a;
@@ -399,7 +460,7 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 	while(ht_get_s(temp, &i, &j, &u)!=NULL) {
 		//struct ride* current_ride = rides->entries[i];
 		//if (u == NULL) continue;
-
+		
 		// Get the driver and user for the current ride
 		DRIVER current_driver = get_driver(drivers, get_ride_driver(u));
 		USER current_user = get_user(users, get_ride_user(u));
@@ -522,12 +583,12 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 		case 5:
 		//TODO
 			query_5(atoi(query_param[1]), query_param[2], query_param[3], ds, us);
-			break;
+			break;*/
 		case 6:
 		//TODO
-			query_6(atoi(query_param[1]), query_param[2], us, ds, rs);
+			query_6(query_param[1], query_param[2], query_param[3], rs, NULL);
 			break;
-		case 7:
+		/*case 7:
 		//TODO
 			query_7(query_param[1], ds, rs);
 			break;*/
@@ -599,7 +660,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 			//
 			break;
 		case 6:
-			//
+			query_6(query_param[1], query_param[2], query_param[3], rs, pg);
 			break;
 
 		case 7:

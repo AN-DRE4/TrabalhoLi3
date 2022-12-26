@@ -281,6 +281,20 @@ char *get_ride_id(void *r) {
 }
 
 /**
+ * @brief Função get_ride_date
+ *
+ * Função que retorna a data de uma ride
+ * 
+ * @param r ride
+ * @returns data da ride
+ */
+
+char *get_ride_date(void *r) {
+    RIDE rc = (RIDE) r;
+    return strdup(rc->date);
+}
+
+/**
  * @brief Função get_ride_driver
  * 
  * Função que retorna o driver de uma ride
@@ -308,6 +322,21 @@ char *get_ride_driver(void *r) {
 char *get_ride_user(void *r) {
     RIDE rc = (RIDE) r;
     return strdup(rc->user);
+}
+
+/**
+ * @brief Função get_ride_city
+ * 
+ * Função que retorna a cidade de uma ride
+ * 
+ * @param r ride
+ * 
+ * @returns cidade da ride
+ */
+
+char *get_ride_city(void *r) {
+    RIDE rc = (RIDE) r;
+    return strdup(rc->city);
 }
 
 /**
