@@ -96,6 +96,7 @@ void interface_IO(char *drivers_path, char *rides_path, char *users_path){
     system("clear||cls");
     int ans_data;
     char * n_data = malloc(50*sizeof(char)); char * data1 = malloc(50*sizeof(char)); char * data2 = malloc(50*sizeof(char)); char * lang = malloc(50*sizeof(char));
+    int n_condutores;
     char *query_param[4];
 
     puts("\n|---------------------------------------------------------------------------------------|\n");
@@ -165,7 +166,16 @@ void interface_IO(char *drivers_path, char *rides_path, char *users_path){
             break;
 
         case 7 :
-			//Stuff for query 7
+            puts("Insira o número de condutores:\n");
+            scanf("%d",n_condutores);
+			puts("Insira a cidade:\n");
+			scanf("%s",n_data);
+            putchar('\n');
+            query_param[1] = data1;
+            query_param[2] = n_data;
+            read_queries_2(7,query_param,pg,drivers_path,rides_path,users_path);
+            //printf("Tamanho da pagina: %d\n", get_pg_size(pg));
+            sub_interface_IO(pg);
             break;
 
         case 8 :
