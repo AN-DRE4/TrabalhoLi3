@@ -419,6 +419,55 @@ int compare_rides(void* two, const void* a, const void* b) {
 	return compare_rides1(a, b, users, drivers);
 }
 
+void ordenaDecrescente(float *score_driver_final, char *driver_id_final,int num_drivers_final)
+{
+    for (int i = 0; i < num_drivers_final - 1; i++)
+    {
+        for (int j = i; j < num_drivers_final - 1; j++)
+        {
+            if (score_driver_final[i] < score_driver_final[j])
+            {
+                int temp = score_driver_final[i];
+				int tomp = driver_id_final[i];
+                score_driver_final[i] = score_driver_final[j];
+				driver_id_final[i] = driver_id_final[j];
+                score_driver_final[j] = temp;
+				driver_id_final[j] = tomp;
+            }
+        }
+    }
+}
+
+//função auxiliar para a querie_7 que verifica se um valor se encontra em um dado array
+int not_in(char id,char *id_final, int N){
+	int res=0;
+
+	for(int i=0;i<N;i++){
+		if(strcmp(id_final[i],id)==0){
+			res=-1;
+			break;
+		}
+	}
+	return res;
+}
+
+float calcula_media_score_driver(double id,char *driver_id,float *score_driver,int N){
+	float media;
+	float valores=0;
+	int nr_valores=0;
+
+	for(int i=0;i<N;i++){
+		if(id==driver_id[i]){
+			valores+=score_driver[i];
+			nr_valores++;
+		}
+	}
+
+	media = valores/nr_valores;
+
+	return media;
+}
+
 /**
  * @brief Função query_7
  * 
@@ -438,7 +487,7 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	// }
 
 	// Create an array to hold the driver of the matching rides
-	double* driver_id = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	char* driver_id = malloc(ht_count(rides_ht) * sizeof(RIDE));
 	if (driver_id == NULL) {
 		printf("Error allocating memory!\n");
 		return;
@@ -468,8 +517,8 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 
 	// Create an final array to hold the driver of the matching rides
 	// to not appear more than 1 time the same driver
-	double* driver_id_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (driver_id == NULL) {
+	char* driver_id_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (driver_id_final == NULL) {
 		printf("Error allocating memory!\n");
 		return;
 	}
@@ -477,7 +526,7 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	// Create an final array to hold the score_driver of the matching rides
 	// to not appear more than 1 time a score of the same driver
 	float* score_driver_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (score_driver == NULL) {
+	if (score_driver_final == NULL) {
 		printf("Error allocating memory!\n");
 		return;
 	}
@@ -498,37 +547,47 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	//pegar no n e criar novo array só com os n maiores a partir de 
 	//num_driver_final e score_driver_final
 
+	ordenaDecrescente(float *score_driver_final, char *driver_id_final,int num_drivers_final);
 
-}
-
-//função auxiliar para a querie_7 que verifica se um valor se encontra em um dado array
-int not_in(double id,double *id_final, int N){
-	int res=0;
-
-	for(int i=0;i<N;i++){
-		if(id_final[i]==id){
-			res=-1;
-			break;
-		}
-	}
-	return res;
-}
-
-float calcula_media_score_driver(double id,double *driver_id,float *score_driver,int N){
-	float media;
-	float valores=0;
-	int nr_valores=0;
-
-	for(int i=0;i<N;i++){
-		if(id==driver_id[i]){
-			valores+=score_driver[i];
-			nr_valores++;
-		}
+	//get the name of n first by id
+	char* name = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (name == NULL) {
+		printf("Error allocating memory!\n");
+		return;
 	}
 
-	media = valores/nr_valores;
+	for(int i=0;i<n;i++){
+		name[i]=get_driver_name(get_driver(drivers,driver_id_final[i]));
+	}
 
-	return media;
+	//print into a folder the id;nome;avaliação_media
+	FILE *fp;
+
+	char line[256];
+	if (opt) {
+		fp = get_output_file();
+		if (fp == NULL) {
+				printf("Error opening file!\n");
+				return;
+		}
+	}
+	for (int i = 0; i < num_driver_final; i++) {
+		if (opt) {
+			
+			fprintf(fp, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]); 
+			//fclose(fp);
+		} else {
+			sprintf(line, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]);
+			push_pagina(pg, line);
+			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
+		}
+	}
+
+	// Close the file
+	free(driver_id_final);
+	free(score_driver_final);
+	if(opt) fclose(fp);
+
 }
 
 /**
