@@ -340,19 +340,6 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
 }*/
 
 static void query_6(char* city, char* start_date, char* end_date, RIDES rides, PAGINACAO pg) {
-	// Convert the dates to time_t values
-	/*struct tm start_tm, end_tm;
-	memset(&start_tm, 0, sizeof(struct tm));
-	memset(&end_tm, 0, sizeof(struct tm));
-	sscanf(start_date, "%d/%d/%d", &start_tm.tm_mday, &start_tm.tm_mon, &start_tm.tm_year);
-	sscanf(end_date, "%d/%d/%d", &end_tm.tm_mday, &end_tm.tm_mon, &end_tm.tm_year);
-	start_tm.tm_mon--; // tm_mon is 0-indexed
-	end_tm.tm_mon--;
-	start_tm.tm_year -= 1900; // tm_year is the number of years since 1900
-	end_tm.tm_year -= 1900;
-	time_t start_time = mktime(&start_tm);
-	time_t end_time = mktime(&end_tm);*/
-
 	int i = 0, j = 0;
 	void *u = NULL;
 	ht *rides_ht = get_rides_table(rides);
@@ -531,8 +518,17 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 
 	char line[1024];
 	FILE *input_commands = fopen(f, "r");
+	if (input_commands == NULL) {
+		printf("Error opening file!\n");
+		return;
+	}
+	
 	get_output_dir_file("Resultados");
     FILE *test_file = get_output_file_tests();
+	if (test_file == NULL) {
+		printf("Error opening file!\n");
+		return;
+	}
 
 	double time_spent;
     clock_t begin;
@@ -566,7 +562,9 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride, NULL);
 			end = clock();
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-    		fprintf(test_file,"query 1 done in %f\n", time_spent);
+			printf("query 1 done in %f\n", time_spent);
+    		//fprintf(test_file,"query 1 done in %f\n", time_spent);
+			fputs("query 1 done in bruh", test_file);
 			break;
 		case 2:
 			//TODO
@@ -585,16 +583,24 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			query_5(atoi(query_param[1]), query_param[2], query_param[3], ds, us);
 			break;*/
 		case 6:
-		//TODO
+			time_spent = 0.0;
+			begin = clock();
 			query_6(query_param[1], query_param[2], query_param[3], rs, NULL);
+			end = clock();
+			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+    		fprintf(test_file,"query 6 done in %f\n", time_spent);
 			break;
 		/*case 7:
 		//TODO
 			query_7(query_param[1], ds, rs);
 			break;*/
 		case 8:
-		//TODO
+			time_spent = 0.0;
+			begin = clock();			
 			query_8(query_param[1], query_param[2], us, ds, rs, NULL);
+			end = clock();
+			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+    		fprintf(test_file,"query 8 done in %f\n", time_spent);
 			break;
 		/*case 9:
 		//TODO
@@ -609,6 +615,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 	}
 
 	fclose(input_commands);
+	fclose(test_file);
 
 	delete_users(us);
 	delete_drivers(ds);
