@@ -318,27 +318,6 @@ static void query_2(char *inp,DRIVERS ds,USERS us,RIDES rs,ht *ht_driver_ride,ht
     }
 }
 
-/**
- * @brief Função query_8
- * 
- * Função que imprime no ficheiro de output os todas as viagens onde 
- * o utilizador e o condutor são do mesmo género e onde ambos têm uma
- * idade igual ou superior à passada.
-*/
-
-/*static void query_8(char *gender, char* idade, USERS us, DRIVERS ds, RIDES rs, PAGINACAO pg) {
-	int age = atoi(idade);
-	if (age <= 0) {
-		return;
-	}
-	//Percorrer todas as viagens e verificar se o condutor e o utilizador são do mesmo género e se têm uma idade igual ou superior à passada
-	for (int i = 0; i < get_num_rides(rs); i++) {
-		RIDE r = get_ride(rs, i);
-		DRIVER d = get_driver(ds, get_ride_driver_id(r));
-		USER u = get_user(us, get_ride_user_id(r));
-	}
-}*/
-
 static void query_6(char* city, char* start_date, char* end_date, RIDES rides, PAGINACAO pg) {
 	int i = 0, j = 0;
 	void *u = NULL;
@@ -427,7 +406,184 @@ int compare_rides(void* two, const void* a, const void* b) {
 	return compare_rides1(a, b, users, drivers);
 }
 
+void ordenaDecrescente(float *score_driver_final, char *driver_id_final,int num_drivers_final)
+{
+    for (int i = 0; i < num_drivers_final - 1; i++)
+    {
+        for (int j = i; j < num_drivers_final - 1; j++)
+        {
+            if (score_driver_final[i] < score_driver_final[j])
+            {
+                int temp = score_driver_final[i];
+				int tomp = driver_id_final[i];
+                score_driver_final[i] = score_driver_final[j];
+				driver_id_final[i] = driver_id_final[j];
+                score_driver_final[j] = temp;
+				driver_id_final[j] = tomp;
+            }
+        }
+    }
+}
 
+//função auxiliar para a querie_7 que verifica se um valor se encontra em um dado array
+int not_in(char id,char *id_final, int N){
+	int res=0;
+
+	for(int i=0;i<N;i++){
+		if(strcmp(id_final[i],id)==0){
+			res=-1;
+			break;
+		}
+	}
+	return res;
+}
+
+float calcula_media_score_driver(double id,char *driver_id,float *score_driver,int N){
+	float media;
+	float valores=0;
+	int nr_valores=0;
+
+	for(int i=0;i<N;i++){
+		if(id==driver_id[i]){
+			valores+=score_driver[i];
+			nr_valores++;
+		}
+	}
+
+	media = valores/nr_valores;
+
+	return media;
+}
+
+/**
+ * @brief Função query_7
+ * 
+ * Função que imprime no ficheiro de output
+ * 
+ * 
+*/
+static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO pg) {
+	int i = 0, j = 0;
+	void *u = NULL;
+	ht *rides_ht = get_rides_table(rides);
+
+	// RIDE *matching_rides = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	// if (matching_rides == NULL) {
+	// 	printf("Error allocating memory!\n");
+	// 	return;
+	// }
+
+	// Create an array to hold the driver of the matching rides
+	char* driver_id = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (driver_id == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+	// Create an array to hold the score_driver of the matching rides
+	float* score_driver = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (score_driver == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+
+	// Iterate through all the rides in the rides hashtable and add the driver and score_driver of the matching rides to the array
+	int num_drivers = 0;
+	while(ht_get_s(rides_ht, &i, &j, &u)!=NULL) {
+		if (u == NULL) continue;
+
+		// Check if the ride is in the specified city
+		if (strcmp(get_ride_city(u), city) == 0){
+			// If the ride matches, add its id and score_driver to the array
+			driver_id[num_drivers] = atof(get_ride_driver(u));
+			score_driver[num_drivers] = atof(get_ride_score_driver(u));
+			num_drivers++;
+		}
+	}
+
+	// Create an final array to hold the driver of the matching rides
+	// to not appear more than 1 time the same driver
+	char* driver_id_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (driver_id_final == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+	// Create an final array to hold the score_driver of the matching rides
+	// to not appear more than 1 time a score of the same driver
+	float* score_driver_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (score_driver_final == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+	//percorre a lista dos drivers
+	int num_driver_final=0;
+	for(int i=0;i<num_drivers;i++){
+		if(not_in(driver_id[i],&driver_id_final,num_drivers)==0) {
+			score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
+			driver_id_final[num_driver_final] = driver_id[i];
+			num_driver_final++;
+		}
+	}
+
+	free(driver_id);
+	free(score_driver);
+
+	//pegar no n e criar novo array só com os n maiores a partir de 
+	//num_driver_final e score_driver_final
+
+	ordenaDecrescente(float *score_driver_final, char *driver_id_final,int num_drivers_final);
+
+	//get the name of n first by id
+	char* name = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (name == NULL) {
+		printf("Error allocating memory!\n");
+		return;
+	}
+
+	for(int i=0;i<n;i++){
+		name[i]=get_driver_name(get_driver(drivers,driver_id_final[i]));
+	}
+
+	//print into a folder the id;nome;avaliação_media
+	FILE *fp;
+
+	char line[256];
+	if (opt) {
+		fp = get_output_file();
+		if (fp == NULL) {
+				printf("Error opening file!\n");
+				return;
+		}
+	}
+	for (int i = 0; i < num_driver_final; i++) {
+		if (opt) {
+			
+			fprintf(fp, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]); 
+			//fclose(fp);
+		} else {
+			sprintf(line, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]);
+			push_pagina(pg, line);
+			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
+		}
+	}
+
+	// Close the file
+	free(driver_id_final);
+	free(score_driver_final);
+	if(opt) fclose(fp);
+
+}
+
+/**
+ * @brief Função query_8
+ * 
+ * Função que imprime no ficheiro de output os todas as viagens onde 
+ * o utilizador e o condutor são do mesmo género e onde ambos têm uma
+ * idade igual ou superior à passada.
+*/
 static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES rides, PAGINACAO pg) {
 	// Open a file for writing
 
@@ -590,10 +746,10 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
     		fprintf(test_file,"query 6 done in %f\n", time_spent);
 			break;
-		/*case 7:
+		case 7:
 		//TODO
-			query_7(query_param[1], ds, rs);
-			break;*/
+			query_7(query_param[1],query_param[2], ds, rs, NULL);
+			break;
 		case 8:
 			time_spent = 0.0;
 			begin = clock();			
@@ -671,7 +827,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 			break;
 
 		case 7:
-			//
+			query_7(query_param[1],query_param[2],ds,rs,pg);
 			break;
 		case 8:
 			query_8(query_param[1], query_param[2], us, ds, rs, pg);
