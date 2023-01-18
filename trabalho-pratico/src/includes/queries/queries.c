@@ -362,7 +362,7 @@ static void query_6(char* city, char* start_date, char* end_date, RIDES rides, P
 		sprintf(line, "%.3f", average);
 		push_pagina(pg, line);
 	}
-
+ 
 	return;
 }
 
@@ -427,14 +427,15 @@ void ordenaDecrescente(float *score_driver_final, char *driver_id_final,int num_
 
 //função auxiliar para a querie_7 que verifica se um valor se encontra em um dado array
 int not_in(char id,char *id_final, int N){
-	int res=0;
+	int res=-1;
 
 	for(int i=0;i<N;i++){
 		if(strcmp(id_final[i],id)==0){
-			res=-1;
-			break;
+			res++;
 		}
 	}
+
+	//SE RES É MAIOR QUE 0 EXISTEM REPETIDOS
 	return res;
 }
 
@@ -466,12 +467,6 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	int i = 0, j = 0;
 	void *u = NULL;
 	ht *rides_ht = get_rides_table(rides);
-
-	// RIDE *matching_rides = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	// if (matching_rides == NULL) {
-	// 	printf("Error allocating memory!\n");
-	// 	return;
-	// }
 
 	// Create an array to hold the driver of the matching rides
 	char* driver_id = malloc(ht_count(rides_ht) * sizeof(RIDE));
@@ -518,14 +513,34 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 		return;
 	}
 
+	// //percorre a lista dos drivers
+	// int num_driver_final=0;
+	// for(int i=0;i<num_drivers;i++){
+	// 	if(not_in(driver_id[i],&driver_id_final,num_drivers)==0) {
+	// 		score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
+	// 		driver_id_final[num_driver_final] = driver_id[i];
+	// 		num_driver_final++;
+	// 	}
+	// }
+
 	//percorre a lista dos drivers
 	int num_driver_final=0;
 	for(int i=0;i<num_drivers;i++){
-		if(not_in(driver_id[i],&driver_id_final,num_drivers)==0) {
+		int qts = not_in(driver_id[i],&driver_id,num_drivers);
+		if(qts==0) {
 			score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
 			driver_id_final[num_driver_final] = driver_id[i];
-			num_driver_final++;
 		}
+		else{
+			score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
+			driver_id_final[num_driver_final] = driver_id[i];
+			for(int j=0;qts!=0;j++){
+				if(driver_id[j]==driver_id[i]) driver_id[j] = NULL;
+				qts--;
+			}
+			
+		}
+		num_driver_final++;
 	}
 
 	free(driver_id);
@@ -534,7 +549,7 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	//pegar no n e criar novo array só com os n maiores a partir de 
 	//num_driver_final e score_driver_final
 
-	ordenaDecrescente(float *score_driver_final, char *driver_id_final,int num_drivers_final);
+	ordenaDecrescente(&score_driver_final,&driver_id_final,num_driver_final);
 
 	//get the name of n first by id
 	char* name = malloc(ht_count(rides_ht) * sizeof(RIDE));
@@ -560,7 +575,6 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	}
 	for (int i = 0; i < num_driver_final; i++) {
 		if (opt) {
-			
 			fprintf(fp, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]); 
 			//fclose(fp);
 		} else {
@@ -574,7 +588,6 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 	free(driver_id_final);
 	free(score_driver_final);
 	if(opt) fclose(fp);
-
 }
 
 /**
@@ -627,7 +640,7 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 	two[0] = users;
 	two[1] = drivers;
 
-	qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
+	//qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
 
 	FILE *fp;
 
