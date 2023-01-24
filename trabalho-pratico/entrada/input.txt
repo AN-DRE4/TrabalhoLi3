@@ -1,5 +1,1 @@
-7 50 Braga
-7 50 Lisboa
-7 50 Porto
-7 50 Setúbal
-7 50 Faro
+7 100 Porto

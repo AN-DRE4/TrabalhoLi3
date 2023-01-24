@@ -463,9 +463,11 @@ float calcula_media_score_driver(double id,char *driver_id,float *score_driver,i
  * 
  * 
 */
-static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO pg) {
+static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users, PAGINACAO pg) {
+	printf("VOU COMEÇAR");
 	int i = 0, j = 0;
 	void *u = NULL;
+	printf("VOU COMEÇAR");
 	ht *rides_ht = get_rides_table(rides);
 
 	// Create an array to hold the driver of the matching rides
@@ -497,6 +499,8 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 		}
 	}
 
+	printf("AQUI");
+
 	// Create an final array to hold the driver of the matching rides
 	// to not appear more than 1 time the same driver
 	char* driver_id_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
@@ -513,15 +517,7 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, PAGINACAO p
 		return;
 	}
 
-	// //percorre a lista dos drivers
-	// int num_driver_final=0;
-	// for(int i=0;i<num_drivers;i++){
-	// 	if(not_in(driver_id[i],&driver_id_final,num_drivers)==0) {
-	// 		score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
-	// 		driver_id_final[num_driver_final] = driver_id[i];
-	// 		num_driver_final++;
-	// 	}
-	// }
+	//--------------------------
 
 	//percorre a lista dos drivers
 	int num_driver_final=0;
@@ -761,7 +757,12 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			break;
 		case 7:
 		//TODO
-			query_7(query_param[1],query_param[2], ds, rs, NULL);
+			time_spent = 0.0;
+			begin = clock();
+			query_7(query_param[1],query_param[2], ds, rs, us, NULL);
+			end = clock();
+			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+			fprintf(test_file,"query 7 done in %f\n", time_spent);
 			break;
 		case 8:
 			time_spent = 0.0;
@@ -840,7 +841,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 			break;
 
 		case 7:
-			query_7(query_param[1],query_param[2],ds,rs,pg);
+			query_7(query_param[1],query_param[2],ds,rs,us,pg);
 			break;
 		case 8:
 			query_8(query_param[1], query_param[2], us, ds, rs, pg);
