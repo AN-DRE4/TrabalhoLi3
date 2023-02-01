@@ -8,7 +8,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "./includes/modules/drivers/drivers.h"
+/*#include "./includes/modules/drivers/drivers.h"
 #include "./includes/modules/users/users.h"
 #include "./includes/modules/rides/rides.h"
 
@@ -22,7 +22,23 @@
 #include "./includes/parsing.h"
 #include "./includes/define.h"
 #include "./includes/queries/queries.h"
-#include "./includes/interface.h"
+#include "./includes/interface.h"*/
+
+#include "../includes/drivers.h"
+#include "../includes/users.h"
+#include "../includes/rides.h"
+
+#include "../includes/driver.h"
+#include "../includes/user.h"
+#include "../includes/ride.h"
+
+#include "../includes/hashtable.h"
+
+#include "../includes/parser.h"
+#include "../includes/parsing.h"
+#include "../includes/define.h"
+#include "../includes/queries.h"
+#include "../includes/interface.h"
 
 // valgrind --leak-check=full --show-leak-kinds=all -s ./teste 
 

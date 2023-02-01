@@ -7,11 +7,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../../parser.h"
+/*#include "../../parser.h"
 #include "../../define.h"
 #include "driver.h"
 #include "drivers.h"
-#include "../../hashtable/hashtable.h"
+#include "../../hashtable/hashtable.h"*/
+
+#include "../../../../includes/parser.h"
+#include "../../../../includes/define.h"
+#include "../../../../includes/driver.h"
+#include "../../../../includes/drivers.h"
+#include "../../../../includes/hashtable.h"
 
 /** 
  * Definição dos catálogos dos drivers

@@ -7,9 +7,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../parser.h"
+/*#include "../parser.h"
 #include "../define.h"
-#include "hashtable.h"
+#include "hashtable.h"*/
+
+#include "../../../includes/parser.h"
+#include "../../../includes/define.h"
+#include "../../../includes/hashtable.h"
 
 /** 
  * Definição dos slots

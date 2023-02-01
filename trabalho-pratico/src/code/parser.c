@@ -7,7 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "define.h"
+//#include "define.h"
+
+#include "../../includes/define.h"
 
 #define __XOPEN_SOURCE
 #include "time.h"

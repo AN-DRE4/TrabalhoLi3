@@ -6,8 +6,11 @@
 #ifndef USERS_H
 #define USERS_H
 
+/*#include "user.h"
+#include "../../hashtable/hashtable.h"*/
+
 #include "user.h"
-#include "../../hashtable/hashtable.h"
+#include "hashtable.h"
 
 /** Definição dos catálogos dos users */
 typedef struct users *USERS;

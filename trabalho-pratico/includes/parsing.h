@@ -6,11 +6,17 @@
 #ifndef PARSING_H
 #define PARSING_H
 
-#include "modules/users/users.h"
+/*#include "modules/users/users.h"
 #include "modules/drivers/drivers.h"
 #include "modules/rides/rides.h"
 
-#include "hashtable/hashtable.h"
+#include "hashtable/hashtable.h"*/
+
+#include "users.h"
+#include "drivers.h"
+#include "rides.h"
+
+#include "hashtable.h"
 
 USERS create_users_catalog(char* users_path);
 DRIVERS create_drivers_catalog(char* drivers_path);

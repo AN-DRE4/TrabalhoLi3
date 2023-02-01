@@ -7,11 +7,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../../parser.h"
+/*#include "../../parser.h"
 #include "../../define.h"
 #include "user.h"
 #include "users.h"
-#include "../../hashtable/hashtable.h"
+#include "../../hashtable/hashtable.h"*/
+
+#include "../../../../includes/parser.h"
+#include "../../../../includes/define.h"
+#include "../../../../includes/user.h"
+#include "../../../../includes/users.h"
+#include "../../../../includes/hashtable.h"
 
 /** 
  * Definição dos catálogos dos users

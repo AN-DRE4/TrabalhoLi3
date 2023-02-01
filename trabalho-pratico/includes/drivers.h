@@ -7,7 +7,8 @@
 #define DRIVERS_H
 
 #include "driver.h"
-#include "../../hashtable/hashtable.h"
+//#include "../../hashtable/hashtable.h"
+#include "hashtable.h"
 
 /** Definição dos catálogos dos drivers */
 typedef struct drivers *DRIVERS;

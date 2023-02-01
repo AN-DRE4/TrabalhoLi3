@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../../parser.h"
+/*#include "../../parser.h"
 #include "../../define.h"
-#include "ride.h"
+#include "ride.h"*/
+
+#include "../../../../includes/parser.h"
+#include "../../../../includes/define.h"
+#include "../../../../includes/ride.h"
 
 /** 
  * Definição dos módulos de driver

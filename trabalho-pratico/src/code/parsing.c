@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "define.h"
+/*#include "define.h"
 #include "parsing.h"
 #include "parser.h"
 #include "modules/users/users.h"
@@ -16,7 +16,18 @@
 #include "modules/users/user.h"
 #include "modules/drivers/driver.h"
 #include "modules/rides/ride.h"
-#include "hashtable/hashtable.h"
+#include "hashtable/hashtable.h"*/
+
+#include "../../includes/define.h"
+#include "../../includes/parsing.h"
+#include "../../includes/parser.h"
+#include "../../includes/users.h"
+#include "../../includes/drivers.h"
+#include "../../includes/rides.h"
+#include "../../includes/user.h"
+#include "../../includes/driver.h"
+#include "../../includes/ride.h"
+#include "../../includes/hashtable.h"
 
 
 #include <time.h>

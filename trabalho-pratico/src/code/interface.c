@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "interface.h"
+//#include "interface.h"
+
+#include "../../includes/interface.h"
 
 struct paginacao {
   char **results;

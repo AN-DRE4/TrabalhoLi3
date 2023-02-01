@@ -6,8 +6,11 @@
 #ifndef RIDES_H
 #define RIDES_H
 
+/*#include "ride.h"
+#include "../../hashtable/hashtable.h"*/
+
 #include "ride.h"
-#include "../../hashtable/hashtable.h"
+#include "hashtable.h"
 
 /** Definição dos catálogos dos rides */
 typedef struct rides *RIDES;

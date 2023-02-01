@@ -12,7 +12,7 @@
 #include <ctype.h>
 #include <time.h>
 
-#include "../define.h"
+/*#include "../define.h"
 #include "../hashtable/hashtable.h"
 #include "../parser.h"
 #include "../parsing.h"
@@ -26,7 +26,23 @@
 #include "../modules/rides/ride.h"
 
 #include "../interface.h"
-#include "queries.h"
+#include "queries.h"*/
+
+#include "../../../includes/define.h"
+#include "../../../includes/hashtable.h"
+#include "../../../includes/parser.h"
+#include "../../../includes/parsing.h"
+
+#include "../../../includes/drivers.h"
+#include "../../../includes/users.h"
+#include "../../../includes/rides.h"
+
+#include "../../../includes/driver.h"
+#include "../../../includes/user.h"
+#include "../../../includes/ride.h"
+
+#include "../../../includes/interface.h"
+#include "../../../includes/queries.h"
 
 int output_n = 1;
 int opt;
@@ -464,10 +480,10 @@ float calcula_media_score_driver(double id,char *driver_id,float *score_driver,i
  * 
 */
 static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users, PAGINACAO pg) {
-	printf("VOU COMEÇAR");
+	printf("VOU COMECAR1\n");
 	int i = 0, j = 0;
 	void *u = NULL;
-	printf("VOU COMEÇAR");
+	printf("VOU COMECAR2\n");
 	ht *rides_ht = get_rides_table(rides);
 
 	// Create an array to hold the driver of the matching rides
@@ -499,7 +515,7 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 		}
 	}
 
-	printf("AQUI");
+	printf("AQUI\n");
 
 	// Create an final array to hold the driver of the matching rides
 	// to not appear more than 1 time the same driver
@@ -509,6 +525,9 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 		return;
 	}
 
+	printf("AQUI2\n");
+	
+
 	// Create an final array to hold the score_driver of the matching rides
 	// to not appear more than 1 time a score of the same driver
 	float* score_driver_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
@@ -517,12 +536,15 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 		return;
 	}
 
+	printf("AQUI3\n");
+
 	//--------------------------
 
 	//percorre a lista dos drivers
 	int num_driver_final=0;
 	for(int i=0;i<num_drivers;i++){
 		int qts = not_in(driver_id[i],&driver_id,num_drivers);
+		printf("AQUI_2-1\n");
 		if(qts==0) {
 			score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
 			driver_id_final[num_driver_final] = driver_id[i];
@@ -536,8 +558,11 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 			}
 			
 		}
+		printf("AQUI_3-2\n");
 		num_driver_final++;
 	}
+
+	printf("AQUI4\n");
 
 	free(driver_id);
 	free(score_driver);
@@ -547,6 +572,8 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 
 	ordenaDecrescente(&score_driver_final,&driver_id_final,num_driver_final);
 
+	printf("AQUI5\n");
+
 	//get the name of n first by id
 	char* name = malloc(ht_count(rides_ht) * sizeof(RIDE));
 	if (name == NULL) {
@@ -554,9 +581,13 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 		return;
 	}
 
+	printf("AQUI6\n");
+
 	for(int i=0;i<n;i++){
 		name[i]=get_driver_name(get_driver(drivers,driver_id_final[i]));
 	}
+
+	printf("AQUI7\n");
 
 	//print into a folder the id;nome;avaliação_media
 	FILE *fp;
@@ -579,6 +610,8 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
 		}
 	}
+
+	printf("AQUI8\n");
 
 	// Close the file
 	free(driver_id_final);
@@ -636,7 +669,7 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 	two[0] = users;
 	two[1] = drivers;
 
-	//qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
+	qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
 
 	FILE *fp;
 
