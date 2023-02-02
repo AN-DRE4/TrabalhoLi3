@@ -115,10 +115,6 @@ DRIVERS create_drivers_catalog(char *drivers_path) {
  */
 
 RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver_ride, char *rides_path) {
-
-
-	printf("%s\n", rides_path);
-
 	double time_spent = 0.0;
 	clock_t begin = clock();
 	
@@ -138,8 +134,6 @@ RIDES create_rides_catalog(USERS us, DRIVERS ds, ht *ht_user_ride, ht *ht_driver
 	int count = 0;
 	int count2 = 0;
 	
-	printf("Creating rides catalog...\n");
-
 	while(fgets(line, LINE_BUFFER, f) != NULL) {
 		remove_possible_new_line(line);
 

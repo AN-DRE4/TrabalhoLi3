@@ -65,7 +65,9 @@ void delete_rides(RIDES rs) {
  * 
  */
 void insert_ride(RIDES rs, char* key, RIDE r){
-	ht_insert(rs->rides, key, r);
+    if(is_valid_ride(r)){
+        ht_insert(rs->rides, key, r);
+    }
 }
 
 /**

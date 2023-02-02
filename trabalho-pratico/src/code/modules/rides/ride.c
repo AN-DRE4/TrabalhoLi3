@@ -255,22 +255,28 @@ void set_ride(RIDE r, char *s) {
  */
 
 int is_valid_ride(RIDE r) {
-	if (!(is_valid_number(r->id)) && 
-        !(is_valid_number(r->driver)) &&
-        !(is_valid_number(r->score_user)) && 
-        !(is_valid_number(r->score_driver)) &&
-        !(is_valid_number(r->distance)))
+	if (!(is_valid_number(r->id)) || 
+        !(is_valid_number(r->driver)) ||
+        !(is_valid_number(r->score_user)) || 
+        !(is_valid_number(r->score_driver)) ||
+        !(is_valid_number(r->distance))) {
 		return 0;
-    if(!(atoi(r->score_user)> 0) &&
-       !(atoi(r->score_driver)> 0) &&
-       !(atoi(r->distance)> 0))
+    }
+    if(!(atoi(r->score_user)> 0) ||
+       !(atoi(r->score_driver)> 0) ||
+       !(atoi(r->distance)> 0)) {
         return 0;
-    if (!(is_valid_double(r->tip)))
+    }
+    if (!(is_valid_double(r->tip))) {
         return 0;
-	if (!(is_valid_date(r->date)))
+    }
+	if (!(is_valid_date(r->date))) {
 		return 0;
-	if (!(is_valid_name(r->user) && is_valid_name(r->city)))
-		return 0;
+    }
+	if (!(is_valid_name(r->user)) || 
+        !(is_valid_name(r->city))) {
+        return 0;
+    }
 	return 1;
 }
 
