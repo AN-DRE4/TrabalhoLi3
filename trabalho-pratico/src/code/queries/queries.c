@@ -56,8 +56,8 @@ int opt;
  */
 static void get_output_dir_file(char * f){
 
-    //mkdir(f,0777);
-    mkdir(f);
+    mkdir(f,0777);
+    //mkdir(f);
 
 }
 
