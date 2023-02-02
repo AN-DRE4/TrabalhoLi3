@@ -479,11 +479,9 @@ float calcula_media_score_driver(double id,char *driver_id,float *score_driver,i
  * 
  * 
 */
-static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users, PAGINACAO pg) {
-	printf("VOU COMECAR1\n");
+static void query_7(char *n, char* city, DRIVERS drivers, RIDES rides, USERS users, PAGINACAO pg) {
 	int i = 0, j = 0;
 	void *u = NULL;
-	printf("VOU COMECAR2\n");
 	ht *rides_ht = get_rides_table(rides);
 
 	// Create an array to hold the driver of the matching rides
@@ -493,15 +491,7 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 		return;
 	}
 
-	// Create an array to hold the score_driver of the matching rides
-	float* score_driver = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (score_driver == NULL) {
-		printf("Error allocating memory!\n");
-		return;
-	}
-
-
-	// Iterate through all the rides in the rides hashtable and add the driver and score_driver of the matching rides to the array
+ 	// Iterate through all the rides in the rides hashtable and add the driver to the array
 	int num_drivers = 0;
 	while(ht_get_s(rides_ht, &i, &j, &u)!=NULL) {
 		if (u == NULL) continue;
@@ -510,113 +500,69 @@ static void query_7(int n, char* city, DRIVERS drivers, RIDES rides, USERS users
 		if (strcmp(get_ride_city(u), city) == 0){
 			// If the ride matches, add its id and score_driver to the array
 			driver_id[num_drivers] = atof(get_ride_driver(u));
-			score_driver[num_drivers] = atof(get_ride_score_driver(u));
 			num_drivers++;
 		}
 	}
 
-	printf("AQUI\n");
-
 	// Create an final array to hold the driver of the matching rides
 	// to not appear more than 1 time the same driver
-	char* driver_id_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (driver_id_final == NULL) {
+	char* unique_drivers = malloc(ht_count(rides_ht) * sizeof(RIDE));
+	if (unique_drivers == NULL) {
 		printf("Error allocating memory!\n");
 		return;
 	}
 
-	printf("AQUI2\n");
+	int num_drivers_final = remove_duplicates(&driver_id,num_drivers,&unique_drivers);
+
+	printf("VOU COMEÇAR6\n");
+
 	
 
-	// Create an final array to hold the score_driver of the matching rides
-	// to not appear more than 1 time a score of the same driver
-	float* score_driver_final = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (score_driver_final == NULL) {
-		printf("Error allocating memory!\n");
-		return;
-	}
+// 	free(driver_id);
+// 	free(score_driver);
 
-	printf("AQUI3\n");
+// 	//pegar no n e criar novo array só com os n maiores a partir de 
+// 	//num_driver_final e score_driver_final
 
-	//--------------------------
+// 	ordenaDecrescente(&score_driver_final,&driver_id_final,num_driver_final);
 
-	//percorre a lista dos drivers
-	int num_driver_final=0;
-	for(int i=0;i<num_drivers;i++){
-		int qts = not_in(driver_id[i],&driver_id,num_drivers);
-		printf("AQUI_2-1\n");
-		if(qts==0) {
-			score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
-			driver_id_final[num_driver_final] = driver_id[i];
-		}
-		else{
-			score_driver_final[num_driver_final] = calcula_media_score_driver(driver_id[i],driver_id,score_driver,num_drivers);
-			driver_id_final[num_driver_final] = driver_id[i];
-			for(int j=0;qts!=0;j++){
-				if(driver_id[j]==driver_id[i]) driver_id[j] = NULL;
-				qts--;
-			}
-			
-		}
-		printf("AQUI_3-2\n");
-		num_driver_final++;
-	}
+// 	//get the name of n first by id
+// 	char* name = malloc(ht_count(rides_ht) * sizeof(RIDE));
+// 	if (name == NULL) {
+// 		printf("Error allocating memory!\n");
+// 		return;
+// 	}
 
-	printf("AQUI4\n");
+// 	for(int i=0;i<n;i++){
+// 		name[i]=get_driver_name(get_driver(drivers,driver_id_final[i]));
+// 	}
 
-	free(driver_id);
-	free(score_driver);
+// 	//print into a folder the id;nome;avaliação_media
+// 	FILE *fp;
 
-	//pegar no n e criar novo array só com os n maiores a partir de 
-	//num_driver_final e score_driver_final
+// 	char line[256];
+// 	if (opt) {
+// 		fp = get_output_file();
+// 		if (fp == NULL) {
+// 				printf("Error opening file!\n");
+// 				return;
+// 		}
+// 	}
+// 	for (int i = 0; i < num_driver_final; i++) {
+// 		if (opt) {
+// 			fprintf(fp, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]); 
+// 			//fclose(fp);
+// 		} else {
+// 			sprintf(line, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]);
+// 			push_pagina(pg, line);
+// 			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
+// 		}
+// 	}
 
-	ordenaDecrescente(&score_driver_final,&driver_id_final,num_driver_final);
-
-	printf("AQUI5\n");
-
-	//get the name of n first by id
-	char* name = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (name == NULL) {
-		printf("Error allocating memory!\n");
-		return;
-	}
-
-	printf("AQUI6\n");
-
-	for(int i=0;i<n;i++){
-		name[i]=get_driver_name(get_driver(drivers,driver_id_final[i]));
-	}
-
-	printf("AQUI7\n");
-
-	//print into a folder the id;nome;avaliação_media
-	FILE *fp;
-
-	char line[256];
-	if (opt) {
-		fp = get_output_file();
-		if (fp == NULL) {
-				printf("Error opening file!\n");
-				return;
-		}
-	}
-	for (int i = 0; i < num_driver_final; i++) {
-		if (opt) {
-			fprintf(fp, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]); 
-			//fclose(fp);
-		} else {
-			sprintf(line, "%s;%s;%.3f\n", driver_id_final[i], name[i], score_driver_final[i]);
-			push_pagina(pg, line);
-			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
-		}
-	}
-
-	printf("AQUI8\n");
-
-	// Close the file
-	free(driver_id_final);
-	free(score_driver_final);
-	if(opt) fclose(fp);
+// 	// Close the file
+// 	free(driver_id_final);
+// 	free(score_driver_final);
+// 	if(opt) fclose(fp);
 }
 
 /**
