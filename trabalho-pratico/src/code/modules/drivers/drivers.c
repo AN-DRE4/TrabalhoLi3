@@ -65,7 +65,10 @@ void delete_drivers(DRIVERS rs) {
  * 
  */
 void insert_driver(DRIVERS rs, char* key, DRIVER r){
-	ht_insert(rs->drivers, key, r);
+    if(is_valid_driver(r)){
+        ht_insert(rs->drivers, key, r);
+    }
+	//ht_insert(rs->drivers, key, r);
 }
 
 /**

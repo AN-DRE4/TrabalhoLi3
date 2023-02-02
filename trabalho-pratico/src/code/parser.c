@@ -121,8 +121,13 @@ int is_equal_ignore_case(const char* word, const char* target) {
  */
 int is_valid_date(const char* date) {
   int day, month, year;
-  // Parse the day, month, and year from the input string
-  sscanf(date, "%d/%d/%d", &day, &month, &year);
+  
+  int items_parsed = sscanf(date, "%d/%d/%d", &day, &month, &year);
+  
+  if (items_parsed != 3) {
+      // The date string is not in the format "dd/mm/yyyy"
+      return 0;
+  }
 
   // Check if the month is out of range
   if (month < 1 || month > 12) {
@@ -229,12 +234,9 @@ int is_valid_gender(char *s) {
  * 
  * @returns bool
  */
-int is_valid_name(char *s) {
-	char *p = s;
-	for (; *p; p++) 
-		if (p > s && *p == '/' && *(p+1) != '\0')
-			return 1;
-	return 0;
+
+int is_valid_name(char *str) {
+    return (str != NULL && str[0] != '\0') ? 1 : 0;
 }
 
 /**

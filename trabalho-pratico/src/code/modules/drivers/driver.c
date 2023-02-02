@@ -204,18 +204,27 @@ void set_driver(DRIVER r, char *line) {
  * @returns bool
  */
 int is_valid_driver(DRIVER r) {
-	if (!(is_valid_number(r->id)))
+	if (!(is_valid_number(r->id))) {
 		return 0;
-    if (!(is_valid_gender(r->gender)))
+	}	
+    if (!(is_valid_gender(r->gender))) {
         return 0;
-    if (!(is_valid_car_class(r->car_class)))
+	}
+    if (!(is_valid_car_class(r->car_class))) {
         return 0;
-	if ((!(is_valid_date(r->birth_day))) || (!(is_valid_date(r->account_creation))))
+	}
+	if (!(is_valid_date(r->birth_day)) ||
+		!(is_valid_date(r->account_creation))) {
 		return 0;
+	}
 	if (!(is_valid_name(r->name)) || 
 	    !(is_valid_name(r->city)) || 
-		!(is_valid_name(r->license_plate)))
+		!(is_valid_name(r->license_plate))) {
 		return 0;
+	}
+	if (!(is_valid_account_status(r->account_status))) {
+		return 0;
+	}
 	return 1;
 }
 

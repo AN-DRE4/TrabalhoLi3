@@ -56,8 +56,8 @@ int opt;
  */
 static void get_output_dir_file(char * f){
 
-    mkdir(f,0777);
-    //mkdir(f);
+    //mkdir(f,0777);
+    mkdir(f);
 
 }
 
@@ -706,13 +706,24 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
  */
 void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 {
-
+	printf("AQUI1\n");
 	ht *ht_user_ride = ht_create(TABLE_SIZE);
 	ht *ht_driver_ride = ht_create(TABLE_SIZE);
 
 	USERS us = create_users_catalog(use_path);
 	DRIVERS ds = create_drivers_catalog(dri_path);
 	RIDES rs = create_rides_catalog(us, ds, ht_user_ride, ht_driver_ride, rid_path);
+
+	printf("AQUI2\n");
+	ht *temp1 = get_users_table(us);
+	printf("Number of users: %d\n", ht_count(temp1));
+	ht_print_table(temp1);
+	printf("AQUI3\n");
+	printf("AQUI4\n");
+	ht *temp3 = get_rides_table(rs);
+	printf("Number of rides: %d\n", ht_count(temp3));
+	//ht_print_table(temp3);
+
 
 	char line[1024];
 	FILE *input_commands = fopen(f, "r");

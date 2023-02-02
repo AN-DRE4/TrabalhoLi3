@@ -178,17 +178,21 @@ void set_user(USER r, char *s) {
  */
 
 int is_valid_user(USER r) {
-    if (!(is_valid_gender(r->gender)))
+    if (!(is_valid_gender(r->gender))) {
         return 0;
+    }
 	if (!(is_valid_date(r->birth_date)) || 
-        !(is_valid_date(r->account_creation)))
+        !(is_valid_date(r->account_creation))) {
 		return 0;
-    if (!(is_valid_account_status(r->account_status)))
+    }
+    if (!(is_valid_account_status(r->account_status))) {
         return 0;
+    }
 	if (!(is_valid_name(r->username)) || 
         !(is_valid_name(r->name)) ||
-        !(is_valid_name(r->pay_method)))
+        !(is_valid_name(r->pay_method))) {
 		return 0;
+    }
 	return 1;
 }
 

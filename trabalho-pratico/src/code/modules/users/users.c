@@ -65,7 +65,9 @@ void delete_users(USERS rs) {
  * 
  */
 void insert_user(USERS rs, char* key, USER r){
-	ht_insert(rs->users, key, r);
+    if(is_valid_user(r)){
+        ht_insert(rs->users, key, r);
+    }
 }
 
 /**
