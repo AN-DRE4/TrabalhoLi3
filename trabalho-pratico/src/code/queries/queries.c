@@ -391,6 +391,56 @@ static void query_4(char* city, DRIVERS drivers, RIDES rides, PAGINACAO pg){
     return;
 }
 
+static void query_5(char* start_date, char* end_date, DRIVERS drivers, RIDES rides, PAGINACAO *pg) { 
+    int i = 0, j = 0;
+    void *u = NULL;
+    ht *rides_ht = get_rides_table(rides);
+
+    float *prices = malloc(ht_count(rides_ht) * sizeof(float));
+    if (prices == NULL) {
+        printf("Error allocating memory!\n");
+        return;
+    }
+
+
+    int num_prices = 0;
+    while (ht_get_s(rides_ht, &i, &j, &u) != NULL) {
+        if (u == NULL) continue;
+        if (compare_dates(get_ride_date(u), start_date) >= 0 && compare_dates(get_ride_date(u), end_date) <= 0) {
+            DRIVER current_driver = get_driver(drivers, get_ride_driver(u));
+            if(strcmp(get_driver_car_class(current_driver),"basic")==0){
+                float preço = (3.25) + (0.62*(atof(get_ride_distance(u))));
+                prices[num_prices++] = preço;
+            }
+            if(strcmp(get_driver_car_class(current_driver),"green")==0){
+                float preço = (4.00) + (0.79*(atof(get_ride_distance(u))));
+                prices[num_prices++] = preço;
+            }
+            if(strcmp(get_driver_car_class(current_driver),"premium")==0){
+                float preço = (5.20) + (0.94*(atof(get_ride_distance(u))));
+                prices[num_prices++] = preço;
+            }
+        }
+    }
+
+
+    float average = 0;
+    for (int i = 0; i < num_prices; i++) {
+        average += prices[i];
+    }
+
+    average /= num_prices;
+
+    free(prices);
+
+    FILE *f = get_output_file();
+    fprintf(f, "%.3f", average);
+    fclose(f);
+
+
+    return;
+}
+
 static void query_6(char* city, char* start_date, char* end_date, RIDES rides, PAGINACAO pg) {
 	int i = 0, j = 0;
 	void *u = NULL;
@@ -672,7 +722,7 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 	two[0] = users;
 	two[1] = drivers;
 
-	qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
+	//qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
 
 	FILE *fp;
 
@@ -755,41 +805,9 @@ static void query_9(char* start_date, char* end_date, RIDES rides, PAGINACAO pg)
 		}
 	}
 
-	sortArrayDescending(&distances,&tips,&ids,&date,&cidade,num);
-
-	printf("CHEGUEI AQUI\n");
-
 
 }
 
-void sortArrayDescending(float *dist[],float *tips[],char *ids[],char *date[],char *cidade[],int n) {
-    int i, j, temp,temp2,temp3,temp4,temp5;
-    for (i = 0; i < n-1; i++) {
-        for (j = 0; j < n-i-1; j++) {
-            if (dist[j] < dist[j+1]) {
-                temp = dist[j];
-                dist[j] = dist[j+1];
-                dist[j+1] = temp;
-				//-----------------
-				temp2 = tips[j];
-				tips[j] = tips[j+1];
-                tips[j+1] = temp;
-				//-----------------
-				temp3 = ids[j];
-				ids[j] = ids[j+1];
-                ids[j+1] = temp;
-				//-----------------
-				temp4 = date[j];
-				date[j] = date[j+1];
-                date[j+1] = temp;
-				//----------------
-				temp5 = cidade[j];
-				cidade[j] = cidade[j+1];
-                cidade[j+1] = temp;
-            }
-        }
-    }
-}
 
 /**
  * @brief Função read_queries
@@ -876,10 +894,14 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
             fprintf(test_file,"query 4 done in %f\n", time_spent);
             break;
-		/*case 5:
-		//TODO
-			query_5(atoi(query_param[1]), query_param[2], query_param[3], ds, us);
-			break;*/
+		case 5:
+			time_spent = 0.0;
+            begin = clock();
+            query_5(query_param[1], query_param[2], ds, rs, NULL);
+            end = clock();
+            time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+            fprintf(test_file,"query 5 done in %f\n", time_spent);
+            break;
 		case 6:
 			time_spent = 0.0;
 			begin = clock();
@@ -972,7 +994,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 			query_4(query_param[1],ds,rs,pg);
 			break;
 		case 5:
-			//
+			query_5(query_param[1], query_param[2], ds, rs, pg);
 			break;
 		case 6:
 			query_6(query_param[1], query_param[2], query_param[3], rs, pg);
