@@ -63,13 +63,38 @@ void remove_possible_new_line(char line[]) {
 }
 
 /**
+ * @brief Função is_equal_ignore_case
+ * 
+ * Função que compara duas strings ignorando as diferenças entre maiúsculas e minúsculas
+ * 
+ * @returns int
+*/
+int is_equal_ignore_case(const char* word, const char* target) {
+  //printf("is_equal_ignore_case: %s %s\n", word, target);
+    if (strlen(word) != strlen(target)) {
+      //printf("Nao tem tamanho igual\n");
+        return 0;
+    }
+
+    for (int i = 0; i < strlen(word); i++) {
+        if (tolower(word[i]) != tolower(target[i])) {
+          //printf("Nao sao iguais\n");
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+/**
  * @brief Função is_valid_account_status
  *
  * Função que verifica se o status de uma conta é válido
  * 
  */
 int is_valid_account_status(char *s) {
-	return (is_equal_ignore_case(s, "active") != 0 || is_equal_ignore_case(s, "inactive") != 0) ? 1 : 0;
+  //printf("is_valid_account_status: %s\n", s);
+  return (is_equal_ignore_case(s, "active") != 0 || is_equal_ignore_case(s, "inactive") != 0) ? 1 : 0;
 }
 
 /**
