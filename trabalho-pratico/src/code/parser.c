@@ -116,28 +116,6 @@ static char* remove_spaces(char *s) {
 }
 
 /**
- * @brief Função is_equal_ignore_case
- * 
- * Função que compara duas strings ignorando as diferenças entre maiúsculas e minúsculas
- * 
- * @returns int
-*/
-
-int is_equal_ignore_case(const char* word, const char* target) {
-    if (strlen(word) != strlen(target)) {
-        return 0;
-    }
-
-    for (int i = 0; i < strlen(word); i++) {
-        if (tolower(word[i]) != tolower(target[i])) {
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-/**
  * @brief Função is_valid_date
  *
  * Função que verifica se a string é uma data válida

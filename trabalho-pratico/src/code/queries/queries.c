@@ -76,7 +76,6 @@ static FILE *get_output_file()
 	sprintf(output_file, "%s%d%s", "Resultados/command", output_n, "_output.txt");
 
 	output_n++;
-	// printf("%s\n", output_file);
 	FILE *f = fopen(output_file, "w");
 	if (!f)
 		perror("fopen");
@@ -214,17 +213,12 @@ static double get_avaliacao_media_driver(DRIVER d, ht *ht_driver_ride, RIDES rs,
 
 static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, ht *ht_driver_ride, PAGINACAO pg) {
 	
-	/*FILE *f;
-	if (opt) 
-		f = get_output_file();*/
-
 	int temp = atoi(id);
 	if(temp != 0){
 		DRIVER d = get_driver(ds, id);
 		char *status = get_driver_account_status(d);
 		if(is_equal_ignore_case(status, "inactive") == 1 || d == NULL) {
 			//Se a conta estiver inativa ou o utilizador nao existir, o ficheiro de output é fechado e a função termina
-			//if (opt) 
 			FILE *f = get_output_file();
 			fclose(f);
 			return;
@@ -266,7 +260,6 @@ static void query_1(char *id, USERS us, DRIVERS ds, RIDES rs, ht *ht_user_ride, 
 		char *status = get_user_account_status(u);
 		if(is_equal_ignore_case(status, "inactive") == 1 || u == NULL) {
 			//Se a conta estiver inativa ou o utilizador nao existir, o ficheiro de output é fechado e a função termina
-			//if (opt) 
 			FILE *f = get_output_file();
 			fclose(f);
 			return;
@@ -490,7 +483,6 @@ static void query_6(char* city, char* start_date, char* end_date, RIDES rides, P
 }
 
 int compare_rides1(const void* a, const void* b, USERS users, DRIVERS drivers) {
-	//printf("aqui\n");
   RIDE ride_a = *(RIDE*)a;
   RIDE ride_b = *(RIDE*)b;
 
@@ -500,25 +492,17 @@ int compare_rides1(const void* a, const void* b, USERS users, DRIVERS drivers) {
   DRIVER driver_b = get_driver(drivers, get_ride_driver(ride_b));
   USER user_b = get_user(users, get_ride_user(ride_b));
 
-	/*printf("driver_a: %s\n", get_driver_id(driver_a));
-	printf("driver_b: %s\n", get_driver_id(driver_b));
-	printf("user_a: %s\n", get_user_username(user_a));
-	printf("user_b: %s\n", get_user_username(user_b));*/
-
   // Compare the driver ages
   if (compare_dates(get_driver_account_creation(driver_a), get_driver_account_creation(driver_b)) != 0) {
-	//printf("Teste1\n");
     return compare_dates(get_driver_account_creation(driver_a), get_driver_account_creation(driver_b));
   }
 
   // If the driver ages are the same, compare the user ages
   if (compare_dates(get_user_account_creation(user_a), get_user_account_creation(user_b)) != 0) {
-	//printf("Teste2\n");
     return compare_dates(get_user_account_creation(user_a), get_user_account_creation(user_b));
   }
 
   // If the driver and user ages are the same, compare the ride ids
-	//printf("Teste3\n");
   return atoi(get_ride_id(ride_a)) - atoi(get_ride_id(ride_b)); 
 }
 
@@ -621,7 +605,6 @@ static void query_7(char *n, char* city, DRIVERS drivers, RIDES rides, USERS use
 
 	//int num_drivers_final = remove_duplicates(&driver_id,num_drivers,&unique_drivers);
 
-	printf("VOU COMEÇAR6\n");
 
 	
 
@@ -696,33 +679,25 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
   	//for (int i = 0; i < rides->size; i++) {
 	int num_matching_rides = 0;
 	while(ht_get_s(temp, &i, &j, &u)!=NULL) {
-		//struct ride* current_ride = rides->entries[i];
-		//if (u == NULL) continue;
-		
 		// Get the driver and user for the current ride
 		DRIVER current_driver = get_driver(drivers, get_ride_driver(u));
 		USER current_user = get_user(users, get_ride_user(u));
 		
-		//printf("BRUH");
-
 		if(is_equal_ignore_case(get_driver_account_status(current_driver), "active") == 1 && is_equal_ignore_case(get_user_account_status(current_user), "active") == 1) {
 			// Check if the driver and user have the same gender and are at least the age specified in the parameter
 			if (strcmp(get_driver_gender(current_driver), gender) == 0 && strcmp(get_user_gender(current_user), gender) == 0 && get_driver_account_age(current_driver) >= atoi(age) && get_user_account_age(current_user) >= atoi(age)) {
 				// If they match, print the ride id to the file
 				matching_rides[num_matching_rides++] = u;
-				//fprintf(fp, "%s;%s;%s;%s\n", get_ride_driver(u), get_driver_name(current_driver), get_ride_user(u), get_user_name(current_user)); 
 			}
 		}
 	}
-	printf("Number of matching rides: %d\n", num_matching_rides);
-	printf("Number of rides: %d\n", ht_count(temp));
 
 	//store both users and drivers in an array
 	void *two[2];
 	two[0] = users;
 	two[1] = drivers;
 
-	//qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
+	qsort_s(matching_rides, num_matching_rides, sizeof(RIDE), compare_rides, two);
 
 	FILE *fp;
 
@@ -736,13 +711,10 @@ static void query_8(char *gender, char* age, USERS users, DRIVERS drivers, RIDES
 	}
 	for (int i = 0; i < num_matching_rides; i++) {
 		if (opt) {
-			
 			fprintf(fp, "%s;%s;%s;%s\n", get_ride_driver(matching_rides[i]), get_driver_name(get_driver(drivers, get_ride_driver(matching_rides[i]))), get_ride_user(matching_rides[i]), get_user_name(get_user(users, get_ride_user(matching_rides[i])))); 
-			//fclose(fp);
 		} else {
 			sprintf(line, "%s|%s|%s|%s\n", get_ride_driver(matching_rides[i]), get_driver_name(get_driver(drivers, get_ride_driver(matching_rides[i]))), get_ride_user(matching_rides[i]), get_user_name(get_user(users, get_ride_user(matching_rides[i]))));
 			push_pagina(pg, line);
-			printf("Tamanho da pagina: %d\n", get_pg_size(pg));
 		}
 	}
 
@@ -871,8 +843,6 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			end = clock();
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
 			printf("query 1 done in %f\n", time_spent);
-    		//fprintf(test_file,"query 1 done in %f\n", time_spent);
-			fputs("query 1 done in bruh", test_file);
 			break;
 		case 2:
 			time_spent = 0.0;
@@ -882,17 +852,17 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
 			printf("query 2 done in %f\n", time_spent);
 			break;
-		/*case 3:
+		case 3:
 			//TODO
-			query_3(ht_repo_colabs);
-			break;*/
+			//query_3(ht_repo_colabs);
+			break;
 		case 4:
 			time_spent = 0.0;
             begin = clock();
             query_4(query_param[1],ds,rs,NULL);
             end = clock();
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-            fprintf(test_file,"query 4 done in %f\n", time_spent);
+            printf("query 4 done in %f\n", time_spent);
             break;
 		case 5:
 			time_spent = 0.0;
@@ -900,7 +870,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
             query_5(query_param[1], query_param[2], ds, rs, NULL);
             end = clock();
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-            fprintf(test_file,"query 5 done in %f\n", time_spent);
+            printf("query 5 done in %f\n", time_spent);
             break;
 		case 6:
 			time_spent = 0.0;
@@ -908,7 +878,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			query_6(query_param[1], query_param[2], query_param[3], rs, NULL);
 			end = clock();
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-    		fprintf(test_file,"query 6 done in %f\n", time_spent);
+    		printf("query 6 done in %f\n", time_spent);
 			break;
 		case 7:
 		//TODO
@@ -917,7 +887,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			query_7(query_param[1],query_param[2], ds, rs, us, NULL);
 			end = clock();
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-			fprintf(test_file,"query 7 done in %f\n", time_spent);
+			printf("query 7 done in %f\n", time_spent);
 			break;
 		case 8:
 			time_spent = 0.0;
@@ -925,7 +895,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			query_8(query_param[1], query_param[2], us, ds, rs, NULL);
 			end = clock();
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-    		fprintf(test_file,"query 8 done in %f\n", time_spent);
+    		printf("query 8 done in %f\n", time_spent);
 			break;
 		case 9:
 		//TODO
@@ -934,7 +904,7 @@ void read_queries(char *f, char* dri_path, char* rid_path, char* use_path)
 			query_9(query_param[1], query_param[2], rs, NULL);
 			end = clock();
 			time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-    		fprintf(test_file,"query 8 done in %f\n", time_spent);
+    		printf("query 9 done in %f\n", time_spent);
 			break;
 		}
 
@@ -978,11 +948,7 @@ void read_queries_2(int query, char *query_param[4], PAGINACAO pg, char* dri_pat
 
 	switch (query) {
 		case 1:
-			time_spent = 0;
-			begin = clock();
 			query_1(query_param[1], us, ds, rs, ht_user_ride, ht_driver_ride, pg);
-			end = clock();
-    		time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
 			break;
 		case 2:
 			query_2(query_param[1],ds,us,rs,ht_driver_ride,ht_user_ride,pg);

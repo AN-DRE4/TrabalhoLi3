@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g -o
+CFLAGS = -Wall -O0 -g -o
 MODULES_PATH_COMMITS = src/code/modules/drivers/
 MODULES_PATH_USERS = src/code/modules/users/
 MODULES_PATH_REPOS = src/code/modules/rides/
@@ -12,6 +12,8 @@ TARGET_2 = Resultados
 main:
 	@echo "Compiling"
 	gcc $(FILES) src/main.c $(CFLAGS) $(TARGET)
+
+.PHONY: clean
 
 clean:
 	rm -r $(TARGET) $(TARGET_2)
