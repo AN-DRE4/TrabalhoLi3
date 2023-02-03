@@ -69,7 +69,6 @@ void remove_possible_new_line(char line[]) {
  * 
  */
 int is_valid_account_status(char *s) {
-  //printf("is_valid_account_status: %s\n", s);
 	return (is_equal_ignore_case(s, "active") != 0 || is_equal_ignore_case(s, "inactive") != 0) ? 1 : 0;
 }
 
@@ -100,15 +99,12 @@ static char* remove_spaces(char *s) {
 */
 
 int is_equal_ignore_case(const char* word, const char* target) {
-  //printf("is_equal_ignore_case: %s %s\n", word, target);
     if (strlen(word) != strlen(target)) {
-      //printf("Nao tem tamanho igual\n");
         return 0;
     }
 
     for (int i = 0; i < strlen(word); i++) {
         if (tolower(word[i]) != tolower(target[i])) {
-          //printf("Nao sao iguais\n");
             return 0;
         }
     }
