@@ -12,22 +12,6 @@
 #include <ctype.h>
 #include <time.h>
 
-/*#include "../define.h"
-#include "../hashtable/hashtable.h"
-#include "../parser.h"
-#include "../parsing.h"
-
-#include "../modules/drivers/drivers.h"
-#include "../modules/users/users.h"
-#include "../modules/rides/rides.h"
-
-#include "../modules/drivers/driver.h"
-#include "../modules/users/user.h"
-#include "../modules/rides/ride.h"
-
-#include "../interface.h"
-#include "queries.h"*/
-
 #include "../../../includes/define.h"
 #include "../../../includes/hashtable.h"
 #include "../../../includes/parser.h"
@@ -439,43 +423,31 @@ static void query_6(char* city, char* start_date, char* end_date, RIDES rides, P
 	void *u = NULL;
 	ht *rides_ht = get_rides_table(rides);
 
-	// Create an array to hold the distances of the matching rides
-	float* distances = malloc(ht_count(rides_ht) * sizeof(RIDE));
-	if (distances == NULL) {
-		printf("Error allocating memory!\n");
-		return;
-	}
-
 	// Iterate through all the rides in the rides hashtable and add the distances of the matching rides to the array
 	int num_distances = 0;
+	float dist = 0;
 	while(ht_get_s(rides_ht, &i, &j, &u)!=NULL) {
 		if (u == NULL) continue;
 
 		// Check if the ride is in the specified city and within the specified date range
 		if (strcmp(get_ride_city(u), city) == 0 && compare_dates(get_ride_date(u), start_date) >= 0 && compare_dates(get_ride_date(u), end_date) <= 0) {
-			// If the ride matches, add its distance to the array
-			distances[num_distances++] = atof(get_ride_distance(u));
+			// If the ride matches, increase the number of matching rides and the total distance
+			dist += atof(get_ride_distance(u));
+			num_distances++;
 		}
 	}
 
 	// Calculate the average distance
-	float average = 0;
-	for (int i = 0; i < num_distances; i++) {
-		average += distances[i];
-	}
-	average /= num_distances;
+	dist /= num_distances;
 
-	// Free the array and return the median
-	free(distances);
-
-	//print into a folder the median distance
+	//print into a folder the average distance
 	if (opt) {
 		FILE *f = get_output_file();
-		fprintf(f, "%.3f", average);
+		fprintf(f, "%.3f", dist);
 		fclose(f);
 	} else {
 		char line[256];
-		sprintf(line, "%.3f", average);
+		sprintf(line, "%.3f", dist);
 		push_pagina(pg, line);
 	}
  
