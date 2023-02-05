@@ -12,22 +12,6 @@
 #include <ctype.h>
 #include <time.h>
 
-/*#include "../define.h"
-#include "../hashtable/hashtable.h"
-#include "../parser.h"
-#include "../parsing.h"
-
-#include "../modules/drivers/drivers.h"
-#include "../modules/users/users.h"
-#include "../modules/rides/rides.h"
-
-#include "../modules/drivers/driver.h"
-#include "../modules/users/user.h"
-#include "../modules/rides/ride.h"
-
-#include "../interface.h"
-#include "queries.h"*/
-
 #include "../../../includes/define.h"
 #include "../../../includes/hashtable.h"
 #include "../../../includes/parser.h"
